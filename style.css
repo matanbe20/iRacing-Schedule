@@ -300,6 +300,18 @@ body {
   margin-top: 0.1rem;
 }
 
+.week-laps {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.67rem;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  letter-spacing: 0.02em;
+}
+
 .no-results {
   text-align: center;
   padding: 3rem;
@@ -366,7 +378,7 @@ body {
 
 .week-add-btn {
   position: absolute;
-  top: 0.4rem;
+  bottom: 0.4rem;
   right: 0.4rem;
   width: 22px;
   height: 22px;

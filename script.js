@@ -327,11 +327,11 @@ function renderSeries() {
       const raceId = s.name + '_' + w.week;
       const isAdded = !!mySchedule[raceId];
       const safeRawName = s.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-      return `<div class="week-cell${isCurrent ? ' current' : ''}">
+      return `<div class="week-cell${isCurrent ? ' current' : ''}" style="padding-bottom:1.8rem">
         <div class="week-num">Week ${w.week} ${isCurrent ? '(Current)' : ''}<span style="float:right;color:var(--text-dim);font-weight:400">${w.date}</span></div>
         <div class="week-track">${w.track}</div>
         ${w.car ? `<div class="week-meta" style="font-style:italic">${w.car}</div>` : ''}
-        <div class="week-meta">${w.laps || ''}</div>
+        ${w.laps ? `<span class="week-laps">${w.laps}</span>` : ''}
         <button class="week-add-btn${isAdded ? ' added' : ''}" data-raw-name="${s.name.replace(/"/g, '&quot;')}" data-week="${w.week}" onclick="toggleRace(event,'${safeRawName}',${w.week})" title="${isAdded ? 'Remove from My Schedule' : 'Add to My Schedule'}">${isAdded ? '&#x2713;' : '+'}</button>
       </div>`;
     }).join('');
