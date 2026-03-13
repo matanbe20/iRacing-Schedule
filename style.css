@@ -513,9 +513,19 @@ body {
 
 @media (max-width: 768px) {
   .header-inner { padding: 1rem; }
+  .kofi-btn {
+    position: static;
+    display: inline-flex;
+    margin-top: 0.5rem;
+  }
   .container { padding: 1rem; }
   .tab-nav-inner { padding: 0 1rem; }
-  .filters { gap: 0.5rem; }
+  .filters { gap: 0.4rem; }
+  .filter-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
   .series-cars, .series-freq { display: none; }
   .search-box { width: 100%; }
   .stats { display: none; }
