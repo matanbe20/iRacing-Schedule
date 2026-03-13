@@ -373,10 +373,65 @@ function catLabel(cat) {
   }[cat] || cat;
 }
 
-// State
-let activeCategories = new Set(["OVAL", "SPORTS CAR", "FORMULA CAR", "DIRT OVAL", "DIRT ROAD", "UNRANKED"]);
-let activeClasses = new Set(["R", "D", "C", "B", "A"]);
-let searchQuery = "";
+// All possible values
+const ALL_CATEGORIES = ["OVAL", "SPORTS CAR", "FORMULA CAR", "DIRT OVAL", "DIRT ROAD", "UNRANKED"];
+const ALL_CLASSES = ["R", "D", "C", "B", "A"];
+const STORAGE_KEY = 'iracing-2026s2-filters';
+
+// Load state: URL params take priority > localStorage > defaults (all active)
+function loadState() {
+  const params = new URLSearchParams(window.location.search);
+  const hasUrlParams = params.has('cat') || params.has('cls') || params.has('q');
+
+  if (hasUrlParams) {
+    const cats = params.get('cat');
+    const cls = params.get('cls');
+    return {
+      categories: cats ? cats.split(',').filter(c => ALL_CATEGORIES.includes(c)) : [...ALL_CATEGORIES],
+      classes: cls ? cls.split(',').filter(c => ALL_CLASSES.includes(c)) : [...ALL_CLASSES],
+      search: params.get('q') || ''
+    };
+  }
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (saved) return {
+      categories: (saved.categories || ALL_CATEGORIES).filter(c => ALL_CATEGORIES.includes(c)),
+      classes: (saved.classes || ALL_CLASSES).filter(c => ALL_CLASSES.includes(c)),
+      search: saved.search || ''
+    };
+  } catch {}
+
+  return { categories: [...ALL_CATEGORIES], classes: [...ALL_CLASSES], search: '' };
+}
+
+function saveState() {
+  // Save to localStorage
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    categories: [...activeCategories],
+    classes: [...activeClasses],
+    search: searchQuery
+  }));
+
+  // Update URL params
+  const params = new URLSearchParams();
+  const allCatsActive = ALL_CATEGORIES.every(c => activeCategories.has(c));
+  const allClsActive = ALL_CLASSES.every(c => activeClasses.has(c));
+
+  if (!allCatsActive) params.set('cat', [...activeCategories].join(','));
+  if (!allClsActive) params.set('cls', [...activeClasses].join(','));
+  if (searchQuery) params.set('q', searchQuery);
+
+  const qs = params.toString();
+  const url = window.location.pathname + (qs ? '?' + qs : '');
+  history.replaceState(null, '', url);
+}
+
+// Initialize state
+const initial = loadState();
+let activeCategories = new Set(initial.categories);
+let activeClasses = new Set(initial.classes);
+let searchQuery = initial.search;
 
 // Clean up series name
 function cleanName(name) {
@@ -447,6 +502,17 @@ function toggleCard(header) {
   header.closest('.series-card').classList.toggle('expanded');
 }
 
+// Sync UI buttons to match loaded state
+function syncUI() {
+  document.querySelectorAll('#cat-filters .filter-btn').forEach(btn => {
+    btn.classList.toggle('active', activeCategories.has(btn.dataset.cat));
+  });
+  document.querySelectorAll('#class-filters .filter-btn').forEach(btn => {
+    btn.classList.toggle('active', activeClasses.has(btn.dataset.cls));
+  });
+  document.getElementById('search').value = searchQuery;
+}
+
 // Filter handlers
 document.getElementById('cat-filters').addEventListener('click', e => {
   const btn = e.target.closest('.filter-btn');
@@ -458,6 +524,7 @@ document.getElementById('cat-filters').addEventListener('click', e => {
   } else {
     activeCategories.delete(cat);
   }
+  saveState();
   renderSeries();
 });
 
@@ -471,15 +538,18 @@ document.getElementById('class-filters').addEventListener('click', e => {
   } else {
     activeClasses.delete(cls);
   }
+  saveState();
   renderSeries();
 });
 
 document.getElementById('search').addEventListener('input', e => {
   searchQuery = e.target.value;
+  saveState();
   renderSeries();
 });
 
 // Initial render
+syncUI();
 renderSeries();
 </script>
 </body>
