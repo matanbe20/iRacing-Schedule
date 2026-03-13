@@ -46,7 +46,31 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 1.5rem 2rem;
+    position: relative;
   }
+
+  .kofi-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+
+  .kofi-btn:hover { color: var(--text); border-color: #3d4260; }
+
+  .kofi-btn svg { flex-shrink: 0; color: #ff5e5b; }
 
   .header h1 {
     font-size: 1.5rem;
@@ -500,6 +524,10 @@
   <div class="header-inner">
     <h1><span>iRacing</span> 2026 Season 2 Schedule</h1>
     <p class="subtitle">March 17 - June 8, 2026</p>
+    <a class="kofi-btn" href="https://ko-fi.com/matanbm91" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.618-.845-.710-1.790-.610-2.714.076-.695.374-1.348.808-1.834.826-.919 2.141-1.290 3.312-.965.702.195 1.292.621 1.744 1.194.452-.573 1.042-.999 1.744-1.194 1.171-.325 2.486.046 3.312.965.434.486.732 1.139.808 1.834.100.924.008 1.869-.655 2.759z"/></svg>
+      Buy me a coffee
+    </a>
     <div class="filters">
       <span class="filter-label">Type</span>
       <div class="filter-group" id="cat-filters">
