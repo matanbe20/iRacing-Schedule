@@ -207,8 +207,7 @@ function renderMySchedule() {
   }
 
   entries.sort((a, b) => {
-    const da = parseDateStr(a.date), db = parseDateStr(b.date);
-    if (da !== db) return da - db;
+    if (a.weekNum !== b.weekNum) return a.weekNum - b.weekNum;
     return a.displayName.localeCompare(b.displayName);
   });
 
