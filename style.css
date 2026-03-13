@@ -25,15 +25,17 @@ body {
   color: var(--text);
   line-height: 1.5;
   min-height: 100vh;
-  overflow-x: hidden;
+}
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header {
   background: linear-gradient(180deg, #1a1d27 0%, #0f1117 100%);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
 .header-inner {
@@ -324,9 +326,6 @@ body {
 .tab-nav {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 99;
 }
 
 .tab-nav-inner {
