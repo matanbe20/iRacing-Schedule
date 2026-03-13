@@ -1,0 +1,511 @@
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #232736;
+  --border: #2d3148;
+  --text: #e4e6f0;
+  --text-dim: #8b8fa3;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --oval: #ef4444;
+  --sports: #22c55e;
+  --formula: #a855f7;
+  --dirt-oval: #f59e0b;
+  --dirt-road: #ec4899;
+  --unranked: #6b7280;
+  --current-week: rgba(59, 130, 246, 0.12);
+  --current-week-border: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(180deg, #1a1d27 0%, #0f1117 100%);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  position: relative;
+}
+
+.kofi-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.kofi-btn:hover { color: var(--text); border-color: #3d4260; }
+
+.kofi-btn svg { flex-shrink: 0; color: #ff5e5b; }
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.header h1 span { color: var(--accent); }
+
+.header .subtitle {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.filter-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.25rem;
+  align-self: center;
+}
+
+.filter-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.filter-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.filter-btn.cat-oval.active { background: var(--oval); border-color: var(--oval); }
+.filter-btn.cat-sports.active { background: var(--sports); border-color: var(--sports); color: #000; }
+.filter-btn.cat-formula.active { background: var(--formula); border-color: var(--formula); }
+.filter-btn.cat-dirt-oval.active { background: var(--dirt-oval); border-color: var(--dirt-oval); color: #000; }
+.filter-btn.cat-dirt-road.active { background: var(--dirt-road); border-color: var(--dirt-road); }
+.filter-btn.cat-unranked.active { background: var(--unranked); border-color: var(--unranked); }
+
+.search-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  width: 220px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-box:focus { border-color: var(--accent); }
+
+.search-box::placeholder { color: var(--text-dim); }
+
+.stats {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  align-self: center;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+}
+
+.series-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.series-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.series-card:hover { border-color: #3d4260; }
+
+.series-header {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  user-select: none;
+}
+
+.series-header:hover { background: var(--surface2); }
+
+.cat-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: center;
+}
+
+.cat-badge.oval { background: rgba(239,68,68,0.15); color: var(--oval); }
+.cat-badge.sports { background: rgba(34,197,94,0.15); color: var(--sports); }
+.cat-badge.formula { background: rgba(168,85,247,0.15); color: var(--formula); }
+.cat-badge.dirt-oval { background: rgba(245,158,11,0.15); color: var(--dirt-oval); }
+.cat-badge.dirt-road { background: rgba(236,72,153,0.15); color: var(--dirt-road); }
+.cat-badge.unranked { background: rgba(107,114,128,0.15); color: var(--unranked); }
+
+.class-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+.class-badge.R { color: #ef4444; }
+.class-badge.D { color: #f59e0b; }
+.class-badge.C { color: #eab308; }
+.class-badge.B { color: #22c55e; }
+.class-badge.A { color: #3b82f6; }
+
+.series-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.series-cars {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.series-freq {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.expand-icon {
+  color: var(--text-dim);
+  transition: transform 0.2s;
+  font-size: 0.8rem;
+}
+
+.series-card.expanded .expand-icon { transform: rotate(180deg); }
+
+.schedule-body {
+  display: none;
+  border-top: 1px solid var(--border);
+}
+
+.series-card.expanded .schedule-body { display: block; }
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+.week-cell {
+  background: var(--surface);
+  padding: 0.6rem 0.8rem;
+}
+
+.week-cell.current {
+  background: var(--current-week);
+  border-left: 3px solid var(--current-week-border);
+}
+
+.week-num {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.15rem;
+}
+
+.week-cell.current .week-num {
+  color: #60a5fa;
+}
+
+.week-track {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.week-meta {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 0.1rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+/* Tab navigation */
+.tab-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+.tab-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-dim);
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover { color: var(--text); }
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+  display: none;
+}
+
+.tab-badge:not(:empty) { display: inline-block; }
+
+/* Week add button */
+.week-cell { position: relative; }
+
+.week-add-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-family: inherit;
+  line-height: 1;
+  padding: 0;
+}
+
+.week-add-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.week-add-btn.added {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+}
+
+/* My Schedule panel */
+.my-schedule-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-dim);
+}
+
+.my-schedule-empty p { font-size: 1rem; margin-bottom: 0.5rem; }
+.my-schedule-empty small { font-size: 0.8rem; }
+
+.my-schedule-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.my-schedule-header .count-label {
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.export-group { display: flex; gap: 0.5rem; }
+
+.export-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.export-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.my-week-group { margin-bottom: 1.5rem; }
+
+.my-week-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.my-race-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+  transition: border-color 0.15s;
+}
+
+.my-race-card:hover { border-color: #3d4260; }
+
+.my-race-info { flex: 1; min-width: 0; }
+
+.my-race-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.my-race-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem; }
+
+.my-race-remove {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.my-race-remove:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
+
+@media (max-width: 768px) {
+  .header-inner { padding: 1rem; }
+  .container { padding: 1rem; }
+  .tab-nav-inner { padding: 0 1rem; }
+  .filters { gap: 0.5rem; }
+  .series-cars, .series-freq { display: none; }
+  .search-box { width: 100%; }
+  .stats { display: none; }
+  .week-grid { grid-template-columns: 1fr; }
+}
