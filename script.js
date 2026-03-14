@@ -181,6 +181,55 @@ function toggleRace(event, rawName, weekNum) {
   } else {
     addRace(rawName, weekNum);
   }
+  refreshSeriesState(rawName);
+}
+
+function isSeriesFullyAdded(rawName) {
+  const series = SCHEDULE_DATA.find(s => s.name === rawName);
+  if (!series) return false;
+  return series.weeks.every(w => !!mySchedule[rawName + '_' + w.week]);
+}
+
+function toggleSeries(event, rawName) {
+  event.stopPropagation();
+  const series = SCHEDULE_DATA.find(s => s.name === rawName);
+  if (!series) return;
+  if (isSeriesFullyAdded(rawName)) {
+    series.weeks.forEach(w => { delete mySchedule[rawName + '_' + w.week]; });
+  } else {
+    series.weeks.forEach(w => {
+      const id = rawName + '_' + w.week;
+      if (!mySchedule[id]) {
+        mySchedule[id] = {
+          id, rawName, weekNum: w.week,
+          displayName: cleanName(rawName),
+          category: series.category,
+          cls: series.class,
+          cars: series.cars,
+          track: w.track,
+          date: w.date,
+          laps: w.laps || ''
+        };
+      }
+    });
+  }
+  saveMySchedule();
+  series.weeks.forEach(w => refreshWeekCellState(rawName, w.week));
+  refreshSeriesState(rawName);
+  updateMyScheduleBadge();
+  if (activeTab === 'my') renderMySchedule();
+  if (activeTab === 'week') renderThisWeek();
+}
+
+function refreshSeriesState(rawName) {
+  const isAdded = isSeriesFullyAdded(rawName);
+  document.querySelectorAll('.series-add-btn').forEach(btn => {
+    if (btn.dataset.rawName === rawName) {
+      btn.classList.toggle('added', isAdded);
+      btn.title = isAdded ? 'Remove all weeks from My Schedule' : 'Add all weeks to My Schedule';
+      btn.innerHTML = isAdded ? '&#x2713; All' : '+ All';
+    }
+  });
 }
 
 function refreshWeekCellState(rawName, weekNum) {
@@ -505,6 +554,8 @@ function renderSeries() {
       </div>`;
     }).join('');
 
+    const allAdded = s.weeks.every(w => !!mySchedule[s.name + '_' + w.week]);
+    const safeRawName = s.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     return `<div class="series-card" data-idx="${i}">
       <div class="series-header" onclick="toggleCard(this)">
         <span class="cat-badge ${cc}">${catLabel(s.category)}</span>
@@ -512,6 +563,7 @@ function renderSeries() {
         <span class="series-title">${displayName}${fixed}</span>
         <span class="series-cars">${s.cars}</span>
         <span class="series-freq">${s.frequency}</span>
+        <button class="series-add-btn${allAdded ? ' added' : ''}" data-raw-name="${s.name.replace(/"/g, '&quot;')}" onclick="toggleSeries(event,'${safeRawName}')" title="${allAdded ? 'Remove all weeks from My Schedule' : 'Add all weeks to My Schedule'}">${allAdded ? '&#x2713; All' : '+ All'}</button>
         <span class="expand-icon">&#9662;</span>
       </div>
       <div class="schedule-body">

@@ -393,6 +393,24 @@ body {
 
 .tab-badge:not(:empty) { display: inline-block; }
 
+/* Series add-all button */
+.series-add-btn {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.series-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.series-add-btn.added { background: #16a34a; border-color: #16a34a; color: #fff; }
+
 /* Week add button */
 .week-cell { position: relative; }
 
