@@ -721,6 +721,10 @@ body {
   }
   .container { padding: 1rem; }
   .tab-nav-inner { padding: 0 1rem; }
+  .tab-btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
   .series-cars, .series-freq { display: none; }
   .search-box { flex: 1; min-width: 0; }
   .stats { display: none; }
