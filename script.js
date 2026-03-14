@@ -444,7 +444,7 @@ function renderThisWeek() {
     }
     const week = s.weeks.find(w => w.week === currentWeek);
     if (!week) return;
-    if (activeTracks.size > 0 && !activeTracks.has(week.track)) return;
+    if (activeTracks.size > 0 && !activeTracks.has(baseTrackName(week.track))) return;
     if (q) {
       const haystack = (s.name + ' ' + s.cars + ' ' + week.track + ' ' + (week.car || '')).toLowerCase();
       if (!haystack.includes(q)) return;
@@ -543,7 +543,7 @@ function renderSeries() {
       if (!seriesCars.some(c => activeCars.has(c))) return false;
     }
     if (activeTracks.size > 0) {
-      if (!s.weeks.some(w => activeTracks.has(w.track))) return false;
+      if (!s.weeks.some(w => activeTracks.has(baseTrackName(w.track)))) return false;
     }
     if (q) {
       const haystack = (s.name + ' ' + s.cars + ' ' + s.weeks.map(w => w.track + ' ' + (w.car || '')).join(' ')).toLowerCase();
@@ -625,9 +625,14 @@ function buildCarListUI() {
   renderTags('car');
 }
 
+function baseTrackName(name) {
+  const idx = name.indexOf(' - ');
+  return (idx !== -1 ? name.slice(0, idx) : name).trim();
+}
+
 function buildTrackListUI() {
   const trackSet = new Set();
-  SCHEDULE_DATA.forEach(s => s.weeks.forEach(w => { if (w.track) trackSet.add(w.track); }));
+  SCHEDULE_DATA.forEach(s => s.weeks.forEach(w => { if (w.track) trackSet.add(baseTrackName(w.track)); }));
   allTracks = [...trackSet].sort((a, b) => a.localeCompare(b));
   renderTags('track');
 }
