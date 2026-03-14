@@ -597,7 +597,7 @@ function renderSeries() {
         <span class="cat-badge ${cc}" data-short="${catLabelShort(s.category)}">${catLabel(s.category)}</span>
         <span class="class-badge ${s.class}">${s.class}</span>
         <span class="series-title">${displayName}${fixed}</span>
-        <span class="series-cars">${s.cars}</span>
+        <span class="series-cars" title="${s.cars}">${s.cars}</span>
         <span class="series-freq">${s.frequency}</span>
         <button class="series-add-btn${allAdded ? ' added' : ''}" data-raw-name="${s.name.replace(/"/g, '&quot;')}" onclick="toggleSeries(event,'${safeRawName}')" title="${allAdded ? 'Remove all weeks from My Schedule' : 'Add all weeks to My Schedule'}">${allAdded ? '&#x2713; All' : '+ All'}</button>
         <span class="expand-icon">&#9662;</span>
