@@ -15,25 +15,9 @@
     <p class="season-label" id="season-label"></p>
     <p class="subtitle" id="season-dates"></p>
     <a href='https://ko-fi.com/R5R41VWUGJ' target='_blank' class='kofi-img-btn' style='position:absolute;top:1.25rem;right:2rem;line-height:0;'><img style='border:0px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-    <div class="filters">
-      <span class="filter-label">Type</span>
-      <div class="filter-group" id="cat-filters">
-        <button class="filter-btn cat-oval active" data-cat="OVAL">Oval</button>
-        <button class="filter-btn cat-sports active" data-cat="SPORTS CAR">Sports Car</button>
-        <button class="filter-btn cat-formula active" data-cat="FORMULA CAR">Formula</button>
-        <button class="filter-btn cat-dirt-oval active" data-cat="DIRT OVAL">Dirt Oval</button>
-        <button class="filter-btn cat-dirt-road active" data-cat="DIRT ROAD">Dirt Road</button>
-        <button class="filter-btn cat-unranked active" data-cat="UNRANKED">Unranked</button>
-      </div>
-      <span class="filter-label" style="margin-left:0.5rem">Class</span>
-      <div class="filter-group" id="class-filters">
-        <button class="filter-btn active" data-cls="R">R</button>
-        <button class="filter-btn active" data-cls="D">D</button>
-        <button class="filter-btn active" data-cls="C">C</button>
-        <button class="filter-btn active" data-cls="B">B</button>
-        <button class="filter-btn active" data-cls="A">A</button>
-      </div>
+    <div class="header-controls">
       <input type="text" class="search-box" id="search" placeholder="Search series or track...">
+      <button class="mobile-filter-btn" id="mobile-filter-btn" onclick="openFilterDrawer()">Filters <span id="filter-active-count"></span></button>
       <span class="stats" id="stats"></span>
     </div>
   </div>
@@ -48,12 +32,70 @@
 </div>
 </div>
 
-<div class="container">
-  <div id="all-series-panel">
-    <div class="series-grid" id="series-grid"></div>
+<div class="main-layout">
+  <aside class="filter-sidebar" id="filter-sidebar">
+    <div class="filter-section">
+      <div class="filter-section-header">Type</div>
+      <div class="filter-group" id="cat-filters">
+        <button class="filter-btn cat-oval active" data-cat="OVAL">Oval</button>
+        <button class="filter-btn cat-sports active" data-cat="SPORTS CAR">Sports Car</button>
+        <button class="filter-btn cat-formula active" data-cat="FORMULA CAR">Formula</button>
+        <button class="filter-btn cat-dirt-oval active" data-cat="DIRT OVAL">Dirt Oval</button>
+        <button class="filter-btn cat-dirt-road active" data-cat="DIRT ROAD">Dirt Road</button>
+        <button class="filter-btn cat-unranked active" data-cat="UNRANKED">Unranked</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-header">Class</div>
+      <div class="filter-group" id="class-filters">
+        <button class="filter-btn active" data-cls="R">R</button>
+        <button class="filter-btn active" data-cls="D">D</button>
+        <button class="filter-btn active" data-cls="C">C</button>
+        <button class="filter-btn active" data-cls="B">B</button>
+        <button class="filter-btn active" data-cls="A">A</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-header">
+        Car
+        <button class="filter-clear-btn" id="car-clear-btn" onclick="clearCarFilter()">Clear</button>
+      </div>
+      <div class="autocomplete-wrap">
+        <input type="text" class="car-search-input" id="car-search" placeholder="Search cars..."
+               autocomplete="off"
+               oninput="filterAutocomplete('car', this.value)"
+               onfocus="showAutocomplete('car')"
+               onblur="setTimeout(() => hideAutocomplete('car'), 150)">
+        <div class="autocomplete-dropdown" id="car-dropdown"></div>
+      </div>
+      <div class="selected-tags" id="car-tags"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-header">
+        Track
+        <button class="filter-clear-btn" id="track-clear-btn" onclick="clearTrackFilter()">Clear</button>
+      </div>
+      <div class="autocomplete-wrap">
+        <input type="text" class="car-search-input" id="track-search" placeholder="Search tracks..."
+               autocomplete="off"
+               oninput="filterAutocomplete('track', this.value)"
+               onfocus="showAutocomplete('track')"
+               onblur="setTimeout(() => hideAutocomplete('track'), 150)">
+        <div class="autocomplete-dropdown" id="track-dropdown"></div>
+      </div>
+      <div class="selected-tags" id="track-tags"></div>
+    </div>
+  </aside>
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeFilterDrawer()"></div>
+  <div class="content-area">
+    <div class="container">
+      <div id="all-series-panel">
+        <div class="series-grid" id="series-grid"></div>
+      </div>
+      <div id="my-schedule-panel" style="display:none"></div>
+      <div id="this-week-panel" style="display:none"></div>
+    </div>
   </div>
-  <div id="my-schedule-panel" style="display:none"></div>
-  <div id="this-week-panel" style="display:none"></div>
 </div>
 
 <div class="toast" id="toast"></div>

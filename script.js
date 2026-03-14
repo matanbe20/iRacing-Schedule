@@ -60,15 +60,19 @@ let activeTab = 'all';
 // Load state: URL params take priority > localStorage > defaults (all active)
 function loadState() {
   const params = new URLSearchParams(window.location.search);
-  const hasUrlParams = params.has('cat') || params.has('cls') || params.has('q');
+  const hasUrlParams = params.has('cat') || params.has('cls') || params.has('q') || params.has('cars') || params.has('tracks');
 
   if (hasUrlParams) {
     const cats = params.get('cat');
     const cls = params.get('cls');
+    const cars = params.get('cars');
+    const tracks = params.get('tracks');
     return {
       categories: cats ? cats.split(',').filter(c => ALL_CATEGORIES.includes(c)) : [...ALL_CATEGORIES],
       classes: cls ? cls.split(',').filter(c => ALL_CLASSES.includes(c)) : [...ALL_CLASSES],
-      search: params.get('q') || ''
+      search: params.get('q') || '',
+      cars: cars ? cars.split(',').filter(Boolean) : [],
+      tracks: tracks ? tracks.split(',').filter(Boolean) : []
     };
   }
 
@@ -77,11 +81,13 @@ function loadState() {
     if (saved) return {
       categories: (saved.categories || ALL_CATEGORIES).filter(c => ALL_CATEGORIES.includes(c)),
       classes: (saved.classes || ALL_CLASSES).filter(c => ALL_CLASSES.includes(c)),
-      search: saved.search || ''
+      search: saved.search || '',
+      cars: saved.cars || [],
+      tracks: saved.tracks || []
     };
   } catch {}
 
-  return { categories: [...ALL_CATEGORIES], classes: [...ALL_CLASSES], search: '' };
+  return { categories: [...ALL_CATEGORIES], classes: [...ALL_CLASSES], search: '', cars: [], tracks: [] };
 }
 
 function saveState() {
@@ -89,7 +95,9 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     categories: [...activeCategories],
     classes: [...activeClasses],
-    search: searchQuery
+    search: searchQuery,
+    cars: [...activeCars],
+    tracks: [...activeTracks]
   }));
 
   // Update URL params
@@ -100,6 +108,8 @@ function saveState() {
   if (!allCatsActive) params.set('cat', [...activeCategories].join(','));
   if (!allClsActive) params.set('cls', [...activeClasses].join(','));
   if (searchQuery) params.set('q', searchQuery);
+  if (activeCars.size > 0) params.set('cars', [...activeCars].join(','));
+  if (activeTracks.size > 0) params.set('tracks', [...activeTracks].join(','));
   if (activeTab === 'my' || activeTab === 'week') params.set('tab', activeTab);
 
   const qs = params.toString();
@@ -428,8 +438,13 @@ function renderThisWeek() {
   SCHEDULE_DATA.forEach(s => {
     if (!activeCategories.has(s.category)) return;
     if (!activeClasses.has(s.class)) return;
+    if (activeCars.size > 0) {
+      const seriesCars = s.cars.split(',').map(c => c.trim());
+      if (!seriesCars.some(c => activeCars.has(c))) return;
+    }
     const week = s.weeks.find(w => w.week === currentWeek);
     if (!week) return;
+    if (activeTracks.size > 0 && !activeTracks.has(week.track)) return;
     if (q) {
       const haystack = (s.name + ' ' + s.cars + ' ' + week.track + ' ' + (week.car || '')).toLowerCase();
       if (!haystack.includes(q)) return;
@@ -499,6 +514,8 @@ const initial = loadState();
 let activeCategories = new Set(initial.categories);
 let activeClasses = new Set(initial.classes);
 let searchQuery = initial.search;
+let activeCars = new Set(initial.cars || []);
+let activeTracks = new Set(initial.tracks || []);
 
 // Clean up series name
 function cleanName(name) {
@@ -521,6 +538,13 @@ function renderSeries() {
   const filtered = SCHEDULE_DATA.filter(s => {
     if (!activeCategories.has(s.category)) return false;
     if (!activeClasses.has(s.class)) return false;
+    if (activeCars.size > 0) {
+      const seriesCars = s.cars.split(',').map(c => c.trim());
+      if (!seriesCars.some(c => activeCars.has(c))) return false;
+    }
+    if (activeTracks.size > 0) {
+      if (!s.weeks.some(w => activeTracks.has(w.track))) return false;
+    }
     if (q) {
       const haystack = (s.name + ' ' + s.cars + ' ' + s.weeks.map(w => w.track + ' ' + (w.car || '')).join(' ')).toLowerCase();
       return haystack.includes(q);
@@ -586,6 +610,131 @@ function syncUI() {
     btn.classList.toggle('active', activeClasses.has(btn.dataset.cls));
   });
   document.getElementById('search').value = searchQuery;
+  renderTags('car');
+  renderTags('track');
+}
+
+// Car + Track autocomplete filter system
+let allCars = [];
+let allTracks = [];
+
+function buildCarListUI() {
+  const carSet = new Set();
+  SCHEDULE_DATA.forEach(s => s.cars.split(',').forEach(c => { const n = c.trim(); if (n) carSet.add(n); }));
+  allCars = [...carSet].sort((a, b) => a.localeCompare(b));
+  renderTags('car');
+}
+
+function buildTrackListUI() {
+  const trackSet = new Set();
+  SCHEDULE_DATA.forEach(s => s.weeks.forEach(w => { if (w.track) trackSet.add(w.track); }));
+  allTracks = [...trackSet].sort((a, b) => a.localeCompare(b));
+  renderTags('track');
+}
+
+function getActiveSet(type) { return type === 'car' ? activeCars : activeTracks; }
+function getAllOptions(type) { return type === 'car' ? allCars : allTracks; }
+
+function showAutocomplete(type) {
+  const query = document.getElementById(type + '-search').value;
+  renderDropdown(type, query);
+}
+
+function hideAutocomplete(type) {
+  const el = document.getElementById(type + '-dropdown');
+  if (el) el.classList.remove('visible');
+}
+
+function renderDropdown(type, query) {
+  const dropdown = document.getElementById(type + '-dropdown');
+  if (!dropdown) return;
+  const q = query.toLowerCase();
+  const active = getActiveSet(type);
+  const filtered = getAllOptions(type).filter(item => !active.has(item) && item.toLowerCase().includes(q));
+  if (!filtered.length) { dropdown.classList.remove('visible'); return; }
+  dropdown.innerHTML = filtered.slice(0, 60).map(item => {
+    const safe = item.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    const safeJs = item.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `<div class="autocomplete-option" onmousedown="selectItem('${type}','${safeJs}',event)">${safe}</div>`;
+  }).join('');
+  dropdown.classList.add('visible');
+}
+
+function filterAutocomplete(type, query) {
+  if (!query) { hideAutocomplete(type); return; }
+  renderDropdown(type, query);
+}
+
+function selectItem(type, value, event) {
+  event.preventDefault();
+  getActiveSet(type).add(value);
+  document.getElementById(type + '-search').value = '';
+  hideAutocomplete(type);
+  renderTags(type);
+  applyFilters();
+}
+
+function removeTag(type, value) {
+  getActiveSet(type).delete(value);
+  renderTags(type);
+  applyFilters();
+}
+
+function renderTags(type) {
+  const el = document.getElementById(type + '-tags');
+  if (!el) return;
+  const active = getActiveSet(type);
+  el.innerHTML = [...active].sort().map(item => {
+    const safe = item.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const safeJs = item.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `<span class="selected-tag"><span class="selected-tag-label">${safe}</span><button class="tag-remove" onclick="removeTag('${type}','${safeJs}')" title="Remove">&times;</button></span>`;
+  }).join('');
+}
+
+function applyFilters() {
+  saveState();
+  updateCarFilterBadge();
+  renderSeries();
+  if (activeTab === 'week') renderThisWeek();
+}
+
+function updateCarFilterBadge() {
+  const carClear = document.getElementById('car-clear-btn');
+  if (carClear) carClear.classList.toggle('visible', activeCars.size > 0);
+  const trackClear = document.getElementById('track-clear-btn');
+  if (trackClear) trackClear.classList.toggle('visible', activeTracks.size > 0);
+  const total = activeCars.size + activeTracks.size;
+  const badge = document.getElementById('filter-active-count');
+  if (badge) badge.textContent = total > 0 ? String(total) : '';
+}
+
+function clearCarFilter() {
+  activeCars.clear();
+  renderTags('car');
+  applyFilters();
+}
+
+function clearTrackFilter() {
+  activeTracks.clear();
+  renderTags('track');
+  applyFilters();
+}
+
+function updateSidebarTop() {
+  const h = document.querySelector('.sticky-top').offsetHeight;
+  document.documentElement.style.setProperty('--sticky-height', h + 'px');
+}
+
+function openFilterDrawer() {
+  document.getElementById('filter-sidebar').classList.add('drawer-open');
+  document.getElementById('drawer-overlay').classList.add('visible');
+  document.body.classList.add('drawer-active');
+}
+
+function closeFilterDrawer() {
+  document.getElementById('filter-sidebar').classList.remove('drawer-open');
+  document.getElementById('drawer-overlay').classList.remove('visible');
+  document.body.classList.remove('drawer-active');
 }
 
 // Filter handlers
@@ -647,6 +796,11 @@ if (tabParam === 'my') activeTab = 'my';
 else if (tabParam === 'week') activeTab = 'week';
 
 // Initial render
+buildCarListUI();
+buildTrackListUI();
+updateSidebarTop();
+updateCarFilterBadge();
+window.addEventListener('resize', updateSidebarTop);
 syncUI();
 renderSeries();
 updateMyScheduleBadge();
