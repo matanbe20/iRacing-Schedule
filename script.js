@@ -669,7 +669,14 @@ function renderSeries() {
     return true;
   });
 
-  filtered.sort((a, b) => ALL_CLASSES.indexOf(a.class) - ALL_CLASSES.indexOf(b.class));
+  const CAT_ORDER = ['SPORTS CAR', 'FORMULA CAR', 'OVAL', 'DIRT OVAL', 'DIRT ROAD', 'UNRANKED'];
+  filtered.sort((a, b) => {
+    const classDiff = ALL_CLASSES.indexOf(a.class) - ALL_CLASSES.indexOf(b.class);
+    if (classDiff !== 0) return classDiff;
+    const catDiff = CAT_ORDER.indexOf(a.category) - CAT_ORDER.indexOf(b.category);
+    if (catDiff !== 0) return catDiff;
+    return cleanName(a.name).localeCompare(cleanName(b.name));
+  });
 
   document.getElementById('stats').textContent = `${filtered.length} series`;
 
