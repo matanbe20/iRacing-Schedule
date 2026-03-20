@@ -344,7 +344,7 @@ body {
 }
 
 .filter-sidebar {
-  width: 240px;
+  width: 210px;
   flex-shrink: 0;
   position: sticky;
   top: var(--sticky-height, 120px);
