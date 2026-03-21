@@ -20,12 +20,16 @@ export default function SeriesCard({ series }: SeriesCardProps) {
   const toggleSeries = useStore(s => s.toggleSeries);
   const filterByCategory = useStore(s => s.filterByCategory);
   const filterByClass = useStore(s => s.filterByClass);
+  const ownedCars = useStore(s => s.ownedCars);
 
   const cc = catClass(series.category);
   const displayName = cleanName(series.name);
   const fixed = isFixed(series.name);
   const hasRain = series.weeks.some(w => w.rain != null && w.rain > 0);
   const allAdded = series.weeks.every(w => !!mySchedule[series.name + '_' + w.week]);
+
+  const seriesCars = series.cars.split(',').map(c => c.trim());
+  const carOwned = ownedCars.size > 0 && seriesCars.some(c => ownedCars.has(c));
 
   function handleToggleSeries(e: React.MouseEvent) {
     e.stopPropagation();
@@ -70,6 +74,9 @@ export default function SeriesCard({ series }: SeriesCardProps) {
           <span className="series-rain-icon" title="Rain forecast in some weeks">
             <RainDropSvg />
           </span>
+        )}
+        {carOwned && (
+          <span className="car-owned-badge" title="You own this car">✓ Car</span>
         )}
         <button
           className={'series-add-btn' + (allAdded ? ' added' : '')}

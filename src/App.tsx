@@ -7,6 +7,7 @@ import AllSeriesPanel from './components/AllSeriesPanel';
 import ThisWeekPanel from './components/ThisWeekPanel';
 import MySchedulePanel from './components/MySchedulePanel';
 import ShareModal from './components/ShareModal';
+import GarageModal from './components/GarageModal';
 import Toast from './components/Toast';
 
 export default function App() {
@@ -66,6 +67,7 @@ export default function App() {
 
       <Toast />
       <ShareModal />
+      <GarageModal />
     </>
   );
 }

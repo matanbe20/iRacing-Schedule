@@ -5,6 +5,15 @@ import CategoryFilters from './CategoryFilters';
 import ClassFilters from './ClassFilters';
 import AutocompleteFilter from './AutocompleteFilter';
 
+const GarageIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="3" width="15" height="13" rx="2"/>
+    <path d="M16 8h5l2 4v4h-7V8z"/>
+    <circle cx="5.5" cy="18.5" r="2.5"/>
+    <circle cx="18.5" cy="18.5" r="2.5"/>
+  </svg>
+);
+
 export default function FilterSidebar() {
   const activeCategories = useStore(s => s.activeCategories);
   const activeClasses = useStore(s => s.activeClasses);
@@ -20,6 +29,9 @@ export default function FilterSidebar() {
   const removeCarFilter = useStore(s => s.removeCarFilter);
   const addTrackFilter = useStore(s => s.addTrackFilter);
   const removeTrackFilter = useStore(s => s.removeTrackFilter);
+  const ownedCars = useStore(s => s.ownedCars);
+  const ownedTracks = useStore(s => s.ownedTracks);
+  const openGarageModal = useStore(s => s.openGarageModal);
 
   const allDefault =
     ALL_CATEGORIES.every(c => activeCategories.has(c)) &&
@@ -88,6 +100,17 @@ export default function FilterSidebar() {
             onRemove={removeTrackFilter}
             onClear={clearTrackFilter}
           />
+        </div>
+
+        <div className="filter-section">
+          <div className="filter-section-header">My Garage</div>
+          <button className="garage-open-btn" onClick={openGarageModal}>
+            <GarageIcon />
+            Manage My Garage
+            <span className="garage-open-counts">
+              {ownedCars.size}c / {ownedTracks.size}t
+            </span>
+          </button>
         </div>
 
         <a

@@ -1,6 +1,7 @@
 import React from 'react';
 import useStore from '../store/useStore';
 import { getCurrentWeek } from '../utils/schedule';
+import { baseTrackName } from '../utils/helpers';
 import type { Series, Week } from '../types';
 
 const currentWeek = getCurrentWeek();
@@ -19,8 +20,10 @@ interface WeekCellProps {
 export default function WeekCell({ series, week }: WeekCellProps) {
   const mySchedule = useStore(s => s.mySchedule);
   const toggleRace = useStore(s => s.toggleRace);
+  const ownedTracks = useStore(s => s.ownedTracks);
 
   const isCurrent = week.week === currentWeek;
+  const isOwned = ownedTracks.size > 0 && ownedTracks.has(baseTrackName(week.track));
   const raceId = series.name + '_' + week.week;
   const isAdded = !!mySchedule[raceId];
 
@@ -30,7 +33,7 @@ export default function WeekCell({ series, week }: WeekCellProps) {
   }
 
   return (
-    <div className={'week-cell' + (isCurrent ? ' current' : '')} style={{ paddingBottom: '1.8rem' }}>
+    <div className={'week-cell' + (isCurrent ? ' current' : '') + (isOwned ? ' owned' : '')} style={{ paddingBottom: '1.8rem' }}>
       <div className="week-num">
         Week {week.week} {isCurrent ? '(Current)' : ''}
         <span style={{ float: 'right', color: 'var(--text-dim)', fontWeight: 400 }}>{week.date}</span>

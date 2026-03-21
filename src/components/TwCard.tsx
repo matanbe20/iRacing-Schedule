@@ -1,6 +1,6 @@
 import React from 'react';
 import useStore from '../store/useStore';
-import { catClass, catLabel, catLabelShort, cleanName } from '../utils/helpers';
+import { catClass, catLabel, catLabelShort, cleanName, baseTrackName } from '../utils/helpers';
 import type { Series, Week } from '../types';
 
 interface TwCardProps {
@@ -13,6 +13,8 @@ export default function TwCard({ series, week }: TwCardProps) {
   const favorites = useStore(s => s.favorites);
   const toggleRace = useStore(s => s.toggleRace);
   const toggleFavorite = useStore(s => s.toggleFavorite);
+  const ownedCars = useStore(s => s.ownedCars);
+  const ownedTracks = useStore(s => s.ownedTracks);
 
   const cc = catClass(series.category);
   const raceId = series.name + '_' + week.week;
@@ -20,19 +22,24 @@ export default function TwCard({ series, week }: TwCardProps) {
   const isFav = favorites.has(series.name);
   const meta = [week.track, week.laps, series.cars].filter(Boolean).join(' · ');
 
+  const trackOwned = ownedTracks.size > 0 && ownedTracks.has(baseTrackName(week.track));
+  const seriesCars = series.cars.split(',').map(c => c.trim());
+  const carOwned = ownedCars.size > 0 && seriesCars.some(c => ownedCars.has(c));
+
   function handleToggleRace(e: React.MouseEvent) {
     e.stopPropagation();
     toggleRace(series.name, week.week);
   }
 
   return (
-    <div className="tw-card">
+    <div className={'tw-card' + (trackOwned ? ' owned' : '')}>
       <span className={'cat-badge ' + cc} data-short={catLabelShort(series.category)}>{catLabel(series.category)}</span>
       <span className={'class-badge ' + series.class}>{series.class}</span>
       <div className="tw-card-info">
         <div className="tw-card-title">{cleanName(series.name)}</div>
         <div className="tw-card-meta">{meta}</div>
       </div>
+      {carOwned && <span className="car-owned-badge" title="You own this car">✓ Car</span>}
       <button
         className={'tw-fav-btn' + (isFav ? ' active' : '')}
         onClick={() => toggleFavorite(series.name)}

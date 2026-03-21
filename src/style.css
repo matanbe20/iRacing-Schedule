@@ -15,6 +15,8 @@
   --unranked: #6b7280;
   --current-week: rgba(59, 130, 246, 0.12);
   --current-week-border: #3b82f6;
+  --owned-week: rgba(34, 197, 94, 0.10);
+  --owned-week-border: #22c55e;
   --header-bg: linear-gradient(160deg, #1e2235 0%, #0f1117 60%);
   --header-shadow: 0 4px 24px rgba(0,0,0,0.4);
   --tab-nav-bg: #141720;
@@ -32,6 +34,8 @@
   --accent-glow: rgba(37, 99, 235, 0.12);
   --current-week: rgba(37, 99, 235, 0.08);
   --current-week-border: #2563eb;
+  --owned-week: rgba(22, 163, 74, 0.08);
+  --owned-week-border: #16a34a;
   --header-bg: linear-gradient(160deg, #dce2f5 0%, #f0f2f8 60%);
   --header-shadow: 0 4px 24px rgba(0,0,0,0.08);
   --tab-nav-bg: #e6e9f5;
@@ -613,6 +617,12 @@ body {
   border-left-width: 3px;
 }
 
+.week-cell.owned {
+  background: var(--owned-week);
+  border-color: var(--owned-week-border);
+  border-left-width: 3px;
+}
+
 .week-num {
   font-size: 0.7rem;
   font-weight: 600;
@@ -910,6 +920,7 @@ body {
 
 .tw-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; position: relative; transition: border-color 0.15s; }
 .tw-card:hover { border-color: #3d4260; }
+.tw-card.owned { border-left: 3px solid var(--owned-week-border); background: var(--owned-week); }
 .tw-card-info { flex: 1; min-width: 0; }
 .tw-card-title { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tw-card-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem; }
@@ -920,6 +931,228 @@ body {
 .tw-favorites-header { background: rgba(245,158,11,0.15); color: #f59e0b; }
 /* Make add button static inside tw-card so it sits inline next to the star */
 .tw-card .week-add-btn { position: static; flex-shrink: 0; }
+
+/* Car owned badge (series-level indicator) */
+.car-owned-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+[data-theme="light"] .car-owned-badge {
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+/* My Garage button in sidebar */
+.garage-open-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.garage-open-btn:hover { border-color: var(--accent); background: var(--accent-glow); }
+.garage-open-counts {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+/* Garage Modal */
+.garage-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.garage-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: min(640px, 100%);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.garage-modal-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.75rem;
+}
+.garage-modal-title {
+  font-weight: 700;
+  font-size: 1rem;
+  flex: 1;
+}
+.garage-modal-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.garage-tab-btn {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.garage-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.garage-tab-btn:hover:not(.active) { color: var(--text); }
+.garage-tab-count {
+  font-size: 0.7rem;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 0.05rem 0.4rem;
+  font-weight: 600;
+}
+.garage-tab-btn.active .garage-tab-count { background: var(--accent-glow); }
+
+.garage-modal-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.garage-search {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.garage-search:focus { border-color: var(--accent); }
+.garage-toolbar-actions { display: flex; gap: 0.4rem; }
+.garage-action-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.garage-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.garage-modal-summary {
+  padding: 0.35rem 1rem;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.garage-modal-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.25rem 0;
+}
+.garage-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 0.82rem;
+}
+.garage-item:hover { background: var(--surface2); }
+.garage-item input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.garage-item-name { flex: 1; }
+.garage-free-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 3px;
+  padding: 0.05rem 0.3rem;
+  flex-shrink: 0;
+}
+[data-theme="light"] .garage-free-badge {
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+}
+.garage-empty { padding: 2rem 1rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+
+.garage-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.garage-cancel-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.garage-cancel-btn:hover { color: var(--text); border-color: var(--text-dim); }
+.garage-save-btn {
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.garage-save-btn:hover { opacity: 0.85; }
 
 /* Share button */
 .export-btn-copied { background: #16a34a !important; border-color: #16a34a !important; color: #fff !important; }

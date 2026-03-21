@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { SCHEDULE_DATA } from '../data';
 import { cleanName } from '../utils/helpers';
+import { FREE_CARS, FREE_TRACKS } from '../data/garage-defaults';
 import type { Tab, Theme, MySchedule, RaceEntry } from '../types';
 
 const ALL_CATEGORIES = ['OVAL', 'SPORTS CAR', 'FORMULA CAR', 'DIRT OVAL', 'DIRT ROAD', 'UNRANKED'];
@@ -9,6 +10,7 @@ const STORAGE_KEY = 'iracing-2026s2-filters';
 const MY_SCHEDULE_KEY = 'iracing-2026s2-my-schedule';
 const FAVORITES_KEY = 'iracing-2026s2-favorites';
 const THEME_KEY = 'iracing-theme';
+const OWNED_KEY = 'iracing-2026s2-owned';
 
 export { ALL_CATEGORIES, ALL_CLASSES };
 
@@ -32,6 +34,11 @@ export interface StoreState {
   mySchedule: MySchedule;
   favorites: Set<string>;
 
+  // Ownership
+  ownedCars: Set<string>;
+  ownedTracks: Set<string>;
+  isGarageModalOpen: boolean;
+
   // Filtered count
   filteredCount: number;
 
@@ -48,6 +55,18 @@ export interface StoreState {
   removeTrackFilter: (track: string) => void;
   clearTrackFilter: () => void;
   clearAllFilters: () => void;
+
+  // Ownership actions
+  addOwnedCar(car: string): void;
+  removeOwnedCar(car: string): void;
+  clearOwnedCars(): void;
+  addOwnedTrack(track: string): void;
+  removeOwnedTrack(track: string): void;
+  clearOwnedTracks(): void;
+  setOwnedCars(cars: Set<string>): void;
+  setOwnedTracks(tracks: Set<string>): void;
+  openGarageModal(): void;
+  closeGarageModal(): void;
 
   // Navigation
   setActiveTab: (tab: Tab) => void;
@@ -136,6 +155,23 @@ function loadInitialState(): Partial<StoreState> {
     if (Array.isArray(saved)) favorites = new Set(saved);
   } catch { /* ignore */ }
 
+  let ownedCars = new Set<string>();
+  let ownedTracks = new Set<string>();
+  try {
+    const raw = localStorage.getItem(OWNED_KEY);
+    if (raw === null) {
+      // First visit — pre-populate with items included with iRacing membership
+      ownedCars = new Set(FREE_CARS);
+      ownedTracks = new Set(FREE_TRACKS);
+    } else {
+      const saved = JSON.parse(raw);
+      if (saved) {
+        if (Array.isArray(saved.cars)) ownedCars = new Set(saved.cars);
+        if (Array.isArray(saved.tracks)) ownedTracks = new Set(saved.tracks);
+      }
+    }
+  } catch { /* ignore */ }
+
   const savedTheme = localStorage.getItem(THEME_KEY);
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const theme: Theme = (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : (prefersDark ? 'dark' : 'light');
@@ -185,7 +221,7 @@ function loadInitialState(): Partial<StoreState> {
     history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
   }
 
-  return { ...filters, mySchedule, favorites, theme, activeTab, sharedEntries, isShareModalOpen };
+  return { ...filters, mySchedule, favorites, ownedCars, ownedTracks, theme, activeTab, sharedEntries, isShareModalOpen };
 }
 
 function syncUrlParams(state: StoreState): void {
@@ -215,6 +251,13 @@ function saveFilters(state: StoreState): void {
   }));
 }
 
+function saveOwned(state: StoreState): void {
+  localStorage.setItem(OWNED_KEY, JSON.stringify({
+    cars: [...state.ownedCars],
+    tracks: [...state.ownedTracks],
+  }));
+}
+
 const initialState = loadInitialState();
 
 const useStore = create<StoreState>((set, get) => ({
@@ -236,6 +279,11 @@ const useStore = create<StoreState>((set, get) => ({
   // User data
   mySchedule: initialState.mySchedule ?? {},
   favorites: initialState.favorites ?? new Set(),
+
+  // Ownership
+  ownedCars: initialState.ownedCars ?? new Set(FREE_CARS),
+  ownedTracks: initialState.ownedTracks ?? new Set(FREE_TRACKS),
+  isGarageModalOpen: false,
 
   // Filter actions
   toggleCategory(cat) {
@@ -331,6 +379,58 @@ const useStore = create<StoreState>((set, get) => ({
     const s = get();
     syncUrlParams(s); saveFilters(s);
   },
+
+  // Ownership actions
+  addOwnedCar(car) {
+    set(state => ({ ownedCars: new Set([...state.ownedCars, car]) }));
+    saveOwned(get());
+  },
+
+  removeOwnedCar(car) {
+    set(state => {
+      const next = new Set(state.ownedCars);
+      next.delete(car);
+      return { ownedCars: next };
+    });
+    saveOwned(get());
+  },
+
+  clearOwnedCars() {
+    set({ ownedCars: new Set() });
+    saveOwned(get());
+  },
+
+  addOwnedTrack(track) {
+    set(state => ({ ownedTracks: new Set([...state.ownedTracks, track]) }));
+    saveOwned(get());
+  },
+
+  removeOwnedTrack(track) {
+    set(state => {
+      const next = new Set(state.ownedTracks);
+      next.delete(track);
+      return { ownedTracks: next };
+    });
+    saveOwned(get());
+  },
+
+  clearOwnedTracks() {
+    set({ ownedTracks: new Set() });
+    saveOwned(get());
+  },
+
+  setOwnedCars(cars) {
+    set({ ownedCars: cars });
+    saveOwned(get());
+  },
+
+  setOwnedTracks(tracks) {
+    set({ ownedTracks: tracks });
+    saveOwned(get());
+  },
+
+  openGarageModal() { set({ isGarageModalOpen: true }); },
+  closeGarageModal() { set({ isGarageModalOpen: false }); },
 
   // Navigation
   setActiveTab(tab) {
