@@ -1,15 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { SCHEDULE_DATA } from '../data.js';
-import { baseTrackName } from '../utils/helpers.js';
+import { SCHEDULE_DATA } from '../data';
+import { baseTrackName } from '../utils/helpers';
 
-function buildCarList() {
-  const carSet = new Set();
+function buildCarList(): string[] {
+  const carSet = new Set<string>();
   SCHEDULE_DATA.forEach(s => s.cars.split(',').forEach(c => { const n = c.trim(); if (n) carSet.add(n); }));
   return [...carSet].sort((a, b) => a.localeCompare(b));
 }
 
-function buildTrackList() {
-  const trackSet = new Set();
+function buildTrackList(): string[] {
+  const trackSet = new Set<string>();
   SCHEDULE_DATA.forEach(s => s.weeks.forEach(w => { if (w.track) trackSet.add(baseTrackName(w.track)); }));
   return [...trackSet].sort((a, b) => a.localeCompare(b));
 }
@@ -17,10 +17,18 @@ function buildTrackList() {
 const ALL_CARS = buildCarList();
 const ALL_TRACKS = buildTrackList();
 
-export default function AutocompleteFilter({ type, activeItems, onAdd, onRemove, onClear }) {
+interface AutocompleteFilterProps {
+  type: 'car' | 'track';
+  activeItems: Set<string>;
+  onAdd: (v: string) => void;
+  onRemove: (v: string) => void;
+  onClear: () => void;
+}
+
+export default function AutocompleteFilter({ type, activeItems, onAdd, onRemove, onClear: _onClear }: AutocompleteFilterProps) {
   const [query, setQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const allOptions = type === 'car' ? ALL_CARS : ALL_TRACKS;
   const placeholder = type === 'car' ? 'Search cars...' : 'Search tracks...';
@@ -37,12 +45,12 @@ export default function AutocompleteFilter({ type, activeItems, onAdd, onRemove,
     setTimeout(() => setShowDropdown(false), 150);
   }
 
-  function handleInput(e) {
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     setQuery(e.target.value);
     setShowDropdown(true);
   }
 
-  function handleSelect(item, e) {
+  function handleSelect(item: string, e: React.MouseEvent) {
     e.preventDefault();
     onAdd(item);
     setQuery('');
@@ -63,7 +71,6 @@ export default function AutocompleteFilter({ type, activeItems, onAdd, onRemove,
           placeholder={placeholder}
           autoComplete="off"
           value={query}
-          onInput={handleInput}
           onChange={handleInput}
           onFocus={handleFocus}
           onBlur={handleBlur}

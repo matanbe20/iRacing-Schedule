@@ -1,6 +1,6 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { ALL_CLASSES } from '../store/useStore.js';
+import useStore from '../store/useStore';
+import { ALL_CLASSES } from '../store/useStore';
 
 export default function ClassFilters() {
   const activeClasses = useStore(s => s.activeClasses);

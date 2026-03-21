@@ -1,8 +1,14 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { catClass, catLabel, catLabelShort, cleanName } from '../utils/helpers.js';
+import useStore from '../store/useStore';
+import { catClass, catLabel, catLabelShort, cleanName } from '../utils/helpers';
+import type { Series, Week } from '../types';
 
-export default function TwCard({ series, week }) {
+interface TwCardProps {
+  series: Series;
+  week: Week;
+}
+
+export default function TwCard({ series, week }: TwCardProps) {
   const mySchedule = useStore(s => s.mySchedule);
   const favorites = useStore(s => s.favorites);
   const toggleRace = useStore(s => s.toggleRace);
@@ -14,7 +20,7 @@ export default function TwCard({ series, week }) {
   const isFav = favorites.has(series.name);
   const meta = [week.track, week.laps, series.cars].filter(Boolean).join(' · ');
 
-  function handleToggleRace(e) {
+  function handleToggleRace(e: React.MouseEvent) {
     e.stopPropagation();
     toggleRace(series.name, week.week);
   }

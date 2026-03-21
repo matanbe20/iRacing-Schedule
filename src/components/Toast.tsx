@@ -1,5 +1,5 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
+import useStore from '../store/useStore';
 
 export default function Toast() {
   const toastMessage = useStore(s => s.toastMessage);

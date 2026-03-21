@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import useStore from '../store/useStore.js';
-import { catClass, catLabel, catLabelShort, cleanName, isFixed } from '../utils/helpers.js';
-import WeekCell from './WeekCell.jsx';
+import useStore from '../store/useStore';
+import { catClass, catLabel, catLabelShort, cleanName, isFixed } from '../utils/helpers';
+import WeekCell from './WeekCell';
+import type { Series } from '../types';
 
 const RainDropSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -9,7 +10,11 @@ const RainDropSvg = () => (
   </svg>
 );
 
-export default function SeriesCard({ series }) {
+interface SeriesCardProps {
+  series: Series;
+}
+
+export default function SeriesCard({ series }: SeriesCardProps) {
   const [expanded, setExpanded] = useState(false);
   const mySchedule = useStore(s => s.mySchedule);
   const toggleSeries = useStore(s => s.toggleSeries);
@@ -19,20 +24,20 @@ export default function SeriesCard({ series }) {
   const cc = catClass(series.category);
   const displayName = cleanName(series.name);
   const fixed = isFixed(series.name);
-  const hasRain = series.weeks.some(w => w.rain > 0);
+  const hasRain = series.weeks.some(w => w.rain != null && w.rain > 0);
   const allAdded = series.weeks.every(w => !!mySchedule[series.name + '_' + w.week]);
 
-  function handleToggleSeries(e) {
+  function handleToggleSeries(e: React.MouseEvent) {
     e.stopPropagation();
     toggleSeries(series.name);
   }
 
-  function handleFilterCat(e) {
+  function handleFilterCat(e: React.MouseEvent) {
     e.stopPropagation();
     filterByCategory(series.category);
   }
 
-  function handleFilterClass(e) {
+  function handleFilterClass(e: React.MouseEvent) {
     e.stopPropagation();
     filterByClass(series.class);
   }

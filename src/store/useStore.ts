@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { SCHEDULE_DATA } from '../data.js';
-import { cleanName } from '../utils/helpers.js';
+import { SCHEDULE_DATA } from '../data';
+import { cleanName } from '../utils/helpers';
+import type { Tab, Theme, MySchedule, RaceEntry } from '../types';
 
 const ALL_CATEGORIES = ['OVAL', 'SPORTS CAR', 'FORMULA CAR', 'DIRT OVAL', 'DIRT ROAD', 'UNRANKED'];
 const ALL_CLASSES = ['R', 'D', 'C', 'B', 'A'];
@@ -11,11 +12,79 @@ const THEME_KEY = 'iracing-theme';
 
 export { ALL_CATEGORIES, ALL_CLASSES };
 
-function loadInitialState() {
+export interface StoreState {
+  // Filters
+  activeCategories: Set<string>;
+  activeClasses: Set<string>;
+  searchQuery: string;
+  activeCars: Set<string>;
+  activeTracks: Set<string>;
+
+  // Navigation & UI
+  activeTab: Tab;
+  theme: Theme;
+  isDrawerOpen: boolean;
+  isShareModalOpen: boolean;
+  sharedEntries: RaceEntry[];
+  toastMessage: string | null;
+
+  // User data
+  mySchedule: MySchedule;
+  favorites: Set<string>;
+
+  // Filtered count
+  filteredCount: number;
+
+  // Filter actions
+  toggleCategory: (cat: string) => void;
+  filterByCategory: (cat: string) => void;
+  toggleClass: (cls: string) => void;
+  filterByClass: (cls: string) => void;
+  setSearchQuery: (query: string) => void;
+  addCarFilter: (car: string) => void;
+  removeCarFilter: (car: string) => void;
+  clearCarFilter: () => void;
+  addTrackFilter: (track: string) => void;
+  removeTrackFilter: (track: string) => void;
+  clearTrackFilter: () => void;
+  clearAllFilters: () => void;
+
+  // Navigation
+  setActiveTab: (tab: Tab) => void;
+
+  // Theme
+  toggleTheme: () => void;
+
+  // Schedule actions
+  addRace: (rawName: string, weekNum: number) => void;
+  removeRace: (id: string) => void;
+  toggleRace: (rawName: string, weekNum: number) => void;
+  toggleSeries: (rawName: string) => void;
+  toggleFavorite: (rawName: string) => void;
+
+  // Drawer
+  openDrawer: () => void;
+  closeDrawer: () => void;
+
+  // Share modal
+  openShareModal: (entries: RaceEntry[]) => void;
+  closeShareModal: () => void;
+  addSharedRace: (id: string) => void;
+  addAllShared: () => void;
+
+  // Filtered count
+  setFilteredCount: (n: number) => void;
+
+  // Toast
+  showToast: (msg: string) => void;
+  clearToast: () => void;
+}
+
+function loadInitialState(): Partial<StoreState> {
   const params = new URLSearchParams(window.location.search);
   const hasUrlParams = params.has('cat') || params.has('cls') || params.has('q') || params.has('cars') || params.has('tracks');
 
-  let filters;
+  let filters: Pick<StoreState, 'activeCategories' | 'activeClasses' | 'searchQuery' | 'activeCars' | 'activeTracks'> | undefined;
   if (hasUrlParams) {
     const cats = params.get('cat');
     const cls = params.get('cls');
@@ -30,17 +99,18 @@ function loadInitialState() {
     };
   } else {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const saved = raw ? JSON.parse(raw) : null;
       if (saved) {
         filters = {
-          activeCategories: new Set((saved.categories || ALL_CATEGORIES).filter(c => ALL_CATEGORIES.includes(c))),
-          activeClasses: new Set((saved.classes || ALL_CLASSES).filter(c => ALL_CLASSES.includes(c))),
+          activeCategories: new Set((saved.categories || ALL_CATEGORIES).filter((c: string) => ALL_CATEGORIES.includes(c))),
+          activeClasses: new Set((saved.classes || ALL_CLASSES).filter((c: string) => ALL_CLASSES.includes(c))),
           searchQuery: saved.search || '',
           activeCars: new Set(saved.cars || []),
           activeTracks: new Set(saved.tracks || []),
         };
       }
-    } catch {}
+    } catch { /* ignore */ }
     if (!filters) {
       filters = {
         activeCategories: new Set(ALL_CATEGORIES),
@@ -52,36 +122,37 @@ function loadInitialState() {
     }
   }
 
-  let mySchedule = {};
+  let mySchedule: MySchedule = {};
   try {
-    const saved = JSON.parse(localStorage.getItem(MY_SCHEDULE_KEY));
+    const raw = localStorage.getItem(MY_SCHEDULE_KEY);
+    const saved = raw ? JSON.parse(raw) : null;
     if (saved && typeof saved === 'object') mySchedule = saved;
-  } catch {}
+  } catch { /* ignore */ }
 
-  let favorites = new Set();
+  let favorites: Set<string> = new Set();
   try {
-    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY));
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    const saved = raw ? JSON.parse(raw) : null;
     if (Array.isArray(saved)) favorites = new Set(saved);
-  } catch {}
+  } catch { /* ignore */ }
 
   const savedTheme = localStorage.getItem(THEME_KEY);
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+  const theme: Theme = (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : (prefersDark ? 'dark' : 'light');
 
   const tabParam = params.get('tab');
-  let activeTab = 'all';
+  let activeTab: Tab = 'all';
   if (tabParam === 'my') activeTab = 'my';
   else if (tabParam === 'week') activeTab = 'week';
 
-  // Handle share param
-  let sharedEntries = [];
+  let sharedEntries: RaceEntry[] = [];
   let isShareModalOpen = false;
   const shareParam = params.get('share');
   if (shareParam) {
     try {
       const sharedIds = JSON.parse(atob(shareParam));
       if (Array.isArray(sharedIds)) {
-        sharedIds.forEach(id => {
+        (sharedIds as string[]).forEach(id => {
           const sep = id.lastIndexOf('_');
           if (sep === -1) return;
           const rawName = id.slice(0, sep);
@@ -107,8 +178,7 @@ function loadInitialState() {
         });
         if (sharedEntries.length > 0) isShareModalOpen = true;
       }
-    } catch {}
-    // Clean share param from URL
+    } catch { /* ignore */ }
     const cleanParams = new URLSearchParams(window.location.search);
     cleanParams.delete('share');
     const qs = cleanParams.toString();
@@ -118,7 +188,7 @@ function loadInitialState() {
   return { ...filters, mySchedule, favorites, theme, activeTab, sharedEntries, isShareModalOpen };
 }
 
-function syncUrlParams(state) {
+function syncUrlParams(state: StoreState): void {
   const params = new URLSearchParams();
   const allCatsActive = ALL_CATEGORIES.every(c => state.activeCategories.has(c));
   const allClsActive = ALL_CLASSES.every(c => state.activeClasses.has(c));
@@ -135,7 +205,7 @@ function syncUrlParams(state) {
   history.replaceState(null, '', url);
 }
 
-function saveFilters(state) {
+function saveFilters(state: StoreState): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     categories: [...state.activeCategories],
     classes: [...state.activeClasses],
@@ -147,25 +217,25 @@ function saveFilters(state) {
 
 const initialState = loadInitialState();
 
-const useStore = create((set, get) => ({
+const useStore = create<StoreState>((set, get) => ({
   // Filters
-  activeCategories: initialState.activeCategories,
-  activeClasses: initialState.activeClasses,
-  searchQuery: initialState.searchQuery,
-  activeCars: initialState.activeCars,
-  activeTracks: initialState.activeTracks,
+  activeCategories: initialState.activeCategories ?? new Set(ALL_CATEGORIES),
+  activeClasses: initialState.activeClasses ?? new Set(ALL_CLASSES),
+  searchQuery: initialState.searchQuery ?? '',
+  activeCars: initialState.activeCars ?? new Set(),
+  activeTracks: initialState.activeTracks ?? new Set(),
 
   // Navigation & UI
-  activeTab: initialState.activeTab,
-  theme: initialState.theme,
+  activeTab: initialState.activeTab ?? 'all',
+  theme: initialState.theme ?? 'dark',
   isDrawerOpen: false,
-  isShareModalOpen: initialState.isShareModalOpen,
-  sharedEntries: initialState.sharedEntries,
+  isShareModalOpen: initialState.isShareModalOpen ?? false,
+  sharedEntries: initialState.sharedEntries ?? [],
   toastMessage: null,
 
   // User data
-  mySchedule: initialState.mySchedule,
-  favorites: initialState.favorites,
+  mySchedule: initialState.mySchedule ?? {},
+  favorites: initialState.favorites ?? new Set(),
 
   // Filter actions
   toggleCategory(cat) {
@@ -272,7 +342,7 @@ const useStore = create((set, get) => ({
   // Theme
   toggleTheme() {
     set(state => {
-      const next = state.theme === 'light' ? 'dark' : 'light';
+      const next: Theme = state.theme === 'light' ? 'dark' : 'light';
       localStorage.setItem(THEME_KEY, next);
       document.documentElement.dataset.theme = next;
       return { theme: next };
@@ -404,7 +474,7 @@ const useStore = create((set, get) => ({
     get().showToast(toAdd.length + ' race' + (toAdd.length !== 1 ? 's' : '') + ' added to your schedule');
   },
 
-  // Filtered count (updated by AllSeriesPanel)
+  // Filtered count
   filteredCount: 0,
   setFilteredCount(n) { set({ filteredCount: n }); },
 

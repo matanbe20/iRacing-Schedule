@@ -1,9 +1,9 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { ALL_CATEGORIES, ALL_CLASSES } from '../store/useStore.js';
-import CategoryFilters from './CategoryFilters.jsx';
-import ClassFilters from './ClassFilters.jsx';
-import AutocompleteFilter from './AutocompleteFilter.jsx';
+import useStore from '../store/useStore';
+import { ALL_CATEGORIES, ALL_CLASSES } from '../store/useStore';
+import CategoryFilters from './CategoryFilters';
+import ClassFilters from './ClassFilters';
+import AutocompleteFilter from './AutocompleteFilter';
 
 export default function FilterSidebar() {
   const activeCategories = useStore(s => s.activeCategories);
@@ -99,7 +99,6 @@ export default function FilterSidebar() {
           <img
             style={{ border: '0px' }}
             src="https://storage.ko-fi.com/cdn/kofi3.png?v=6"
-            border="0"
             alt="Buy Me a Coffee at ko-fi.com"
           />
         </a>

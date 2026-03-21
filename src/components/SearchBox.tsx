@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import useStore from '../store/useStore.js';
+import useStore from '../store/useStore';
 
 const PHRASES = ['Spa', 'Porsche Cup', 'GT3', 'Daytona', 'Formula 4', 'Dirt Oval', 'N\xfcrburgring', 'IMSA', 'Late Model'];
 
-function useTypewriter(inputFocused, hasValue) {
+function useTypewriter(inputFocused: boolean, hasValue: boolean): string {
   const [text, setText] = useState('');
-  const stateRef = useRef({ pi: 0, ci: 0, deleting: false, running: true, timer: null });
+  const stateRef = useRef({ pi: 0, ci: 0, deleting: false, running: true, timer: null as ReturnType<typeof setTimeout> | null });
 
   useEffect(() => {
     const s = stateRef.current;
@@ -43,7 +43,7 @@ function useTypewriter(inputFocused, hasValue) {
 
     return () => {
       s.running = false;
-      clearTimeout(s.timer);
+      if (s.timer != null) clearTimeout(s.timer);
     };
   }, [hasValue, inputFocused]);
 

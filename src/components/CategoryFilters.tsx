@@ -1,8 +1,8 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { ALL_CATEGORIES } from '../store/useStore.js';
+import useStore from '../store/useStore';
+import { ALL_CATEGORIES } from '../store/useStore';
 
-const CAT_CLASS = {
+const CAT_CLASS: Record<string, string> = {
   'OVAL': 'cat-oval',
   'SPORTS CAR': 'cat-sports',
   'FORMULA CAR': 'cat-formula',
@@ -11,7 +11,7 @@ const CAT_CLASS = {
   'UNRANKED': 'cat-unranked',
 };
 
-const CAT_LABEL = {
+const CAT_LABEL: Record<string, string> = {
   'OVAL': 'Oval',
   'SPORTS CAR': 'Sports Car',
   'FORMULA CAR': 'Formula',

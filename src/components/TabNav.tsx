@@ -1,5 +1,6 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
+import useStore from '../store/useStore';
+import type { Tab } from '../types';
 
 export default function TabNav() {
   const activeTab = useStore(s => s.activeTab);
@@ -13,21 +14,21 @@ export default function TabNav() {
         <button
           className={'tab-btn' + (activeTab === 'all' ? ' active' : '')}
           id="tab-all"
-          onClick={() => setActiveTab('all')}
+          onClick={() => setActiveTab('all' as Tab)}
         >
           All Series
         </button>
         <button
           className={'tab-btn' + (activeTab === 'week' ? ' active' : '')}
           id="tab-week"
-          onClick={() => setActiveTab('week')}
+          onClick={() => setActiveTab('week' as Tab)}
         >
           This Week
         </button>
         <button
           className={'tab-btn' + (activeTab === 'my' ? ' active' : '')}
           id="tab-my"
-          onClick={() => setActiveTab('my')}
+          onClick={() => setActiveTab('my' as Tab)}
         >
           My Schedule{' '}
           <span className="tab-badge" id="my-schedule-count">

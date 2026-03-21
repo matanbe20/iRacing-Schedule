@@ -1,7 +1,9 @@
+import type { Series } from './types';
+
 export const SEASON_LABEL = '2026 Season 2';
 export const SEASON_DATES = 'March 17 - June 8, 2026';
 
-export const SCHEDULE_DATA = [
+export const SCHEDULE_DATA: Series[] = [
   {
     category: 'OVAL',
     class: 'R',

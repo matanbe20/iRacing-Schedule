@@ -1,8 +1,8 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { SEASON_LABEL, SEASON_DATES } from '../data.js';
-import { ALL_CATEGORIES, ALL_CLASSES } from '../store/useStore.js';
-import SearchBox from './SearchBox.jsx';
+import useStore from '../store/useStore';
+import { SEASON_LABEL, SEASON_DATES } from '../data';
+import { ALL_CATEGORIES, ALL_CLASSES } from '../store/useStore';
+import SearchBox from './SearchBox';
 
 const MOON_SVG = (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -32,7 +32,6 @@ export default function Header() {
   const searchQuery = useStore(s => s.searchQuery);
   const activeTab = useStore(s => s.activeTab);
 
-  // Count active filters for mobile badge
   const filterCount =
     (ALL_CATEGORIES.every(c => activeCategories.has(c)) ? 0 : 1) +
     (ALL_CLASSES.every(c => activeClasses.has(c)) ? 0 : 1) +

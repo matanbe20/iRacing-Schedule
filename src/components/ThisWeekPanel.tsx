@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
-import useStore from '../store/useStore.js';
-import { SCHEDULE_DATA } from '../data.js';
-import { ALL_CATEGORIES } from '../store/useStore.js';
-import { catClass, catLabel, baseTrackName, getWeekDateRange } from '../utils/helpers.js';
-import { getCurrentWeek } from '../utils/schedule.js';
-import TwCard from './TwCard.jsx';
+import useStore from '../store/useStore';
+import { SCHEDULE_DATA } from '../data';
+import { ALL_CATEGORIES } from '../store/useStore';
+import { catClass, catLabel, baseTrackName, getWeekDateRange } from '../utils/helpers';
+import { getCurrentWeek } from '../utils/schedule';
+import TwCard from './TwCard';
+import type { Series, Week } from '../types';
 
 const currentWeek = getCurrentWeek();
 
@@ -33,14 +34,14 @@ export default function ThisWeekPanel() {
         if (!haystack.includes(q)) return false;
       }
       return true;
-    }).map(s => ({ s, week: s.weeks.find(w => w.week === currentWeek) }));
+    }).map(s => ({ s, week: s.weeks.find(w => w.week === currentWeek) as Week }));
   }, [activeCategories, activeClasses, searchQuery, activeCars, activeTracks]);
 
   const dateRange = getWeekDateRange(currentWeek);
   const favResults = results.filter(r => favorites.has(r.s.name));
   const otherResults = results.filter(r => !favorites.has(r.s.name));
 
-  const groups = {};
+  const groups: Record<string, Array<{ s: Series; week: Week }>> = {};
   ALL_CATEGORIES.forEach(cat => { groups[cat] = []; });
   otherResults.forEach(r => groups[r.s.category].push(r));
 

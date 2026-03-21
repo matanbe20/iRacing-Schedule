@@ -1,8 +1,9 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { catClass, catLabel, catLabelShort } from '../utils/helpers.js';
+import useStore from '../store/useStore';
+import { catClass, catLabel, catLabelShort } from '../utils/helpers';
+import type { RaceEntry } from '../types';
 
-function SharedRaceRow({ entry }) {
+function SharedRaceRow({ entry }: { entry: RaceEntry }) {
   const mySchedule = useStore(s => s.mySchedule);
   const addSharedRace = useStore(s => s.addSharedRace);
   const alreadyAdded = !!mySchedule[entry.id];
@@ -37,9 +38,8 @@ export default function ShareModal() {
 
   if (!isShareModalOpen) return null;
 
-  // Group by week
-  const groups = {};
-  const groupOrder = [];
+  const groups: Record<string, RaceEntry[]> = {};
+  const groupOrder: string[] = [];
   sharedEntries.forEach(e => {
     const key = 'Week ' + e.weekNum + ' \u2014 ' + e.date;
     if (!groups[key]) { groups[key] = []; groupOrder.push(key); }
@@ -48,7 +48,7 @@ export default function ShareModal() {
 
   const remaining = sharedEntries.filter(e => !mySchedule[e.id]).length;
 
-  function handleOverlayClick(e) {
+  function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
     if (e.target === e.currentTarget) closeShareModal();
   }
 

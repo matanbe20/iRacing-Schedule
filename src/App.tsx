@@ -1,39 +1,35 @@
 import React, { useEffect, useRef } from 'react';
-import useStore from './store/useStore.js';
-import Header from './components/Header.jsx';
-import TabNav from './components/TabNav.jsx';
-import FilterSidebar from './components/FilterSidebar.jsx';
-import AllSeriesPanel from './components/AllSeriesPanel.jsx';
-import ThisWeekPanel from './components/ThisWeekPanel.jsx';
-import MySchedulePanel from './components/MySchedulePanel.jsx';
-import ShareModal from './components/ShareModal.jsx';
-import Toast from './components/Toast.jsx';
+import useStore from './store/useStore';
+import Header from './components/Header';
+import TabNav from './components/TabNav';
+import FilterSidebar from './components/FilterSidebar';
+import AllSeriesPanel from './components/AllSeriesPanel';
+import ThisWeekPanel from './components/ThisWeekPanel';
+import MySchedulePanel from './components/MySchedulePanel';
+import ShareModal from './components/ShareModal';
+import Toast from './components/Toast';
 
 export default function App() {
   const theme = useStore(s => s.theme);
   const isDrawerOpen = useStore(s => s.isDrawerOpen);
   const isShareModalOpen = useStore(s => s.isShareModalOpen);
   const activeTab = useStore(s => s.activeTab);
-  const stickyRef = useRef(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  // Body class for drawer
   useEffect(() => {
     document.body.classList.toggle('drawer-active', isDrawerOpen);
     return () => document.body.classList.remove('drawer-active');
   }, [isDrawerOpen]);
 
-  // Body class for share modal
   useEffect(() => {
     document.body.classList.toggle('share-modal-open', isShareModalOpen);
     return () => document.body.classList.remove('share-modal-open');
   }, [isShareModalOpen]);
 
-  // --sticky-height ResizeObserver
   useEffect(() => {
     if (!stickyRef.current) return;
     const update = () => {

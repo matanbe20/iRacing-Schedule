@@ -1,4 +1,6 @@
-export function cleanName(name) {
+import type { MySchedule } from '../types';
+
+export function cleanName(name: string): string {
   return name
     .replace(/\s*-\s*2026 Season\s*\d?\s*-?\s*(Fixed)?$/i, '')
     .replace(/\s*-\s*2026 Season\s*\d?\s*(Fixed)?$/i, '')
@@ -7,62 +9,62 @@ export function cleanName(name) {
     .trim();
 }
 
-export function catClass(cat) {
-  return {
+export function catClass(cat: string): string {
+  return ({
     'OVAL': 'oval',
     'SPORTS CAR': 'sports',
     'FORMULA CAR': 'formula',
     'DIRT OVAL': 'dirt-oval',
     'DIRT ROAD': 'dirt-road',
     'UNRANKED': 'unranked'
-  }[cat] || 'unranked';
+  } as Record<string, string>)[cat] || 'unranked';
 }
 
-export function catLabel(cat) {
-  return {
+export function catLabel(cat: string): string {
+  return ({
     'OVAL': 'Oval',
     'SPORTS CAR': 'Sports Car',
     'FORMULA CAR': 'Formula',
     'DIRT OVAL': 'Dirt Oval',
     'DIRT ROAD': 'Dirt Road',
     'UNRANKED': 'Unranked'
-  }[cat] || cat;
+  } as Record<string, string>)[cat] || cat;
 }
 
-export function catLabelShort(cat) {
-  return {
+export function catLabelShort(cat: string): string {
+  return ({
     'OVAL': 'Oval',
     'SPORTS CAR': 'S.Car',
     'FORMULA CAR': 'Formula',
     'DIRT OVAL': 'D.Oval',
     'DIRT ROAD': 'D.Road',
     'UNRANKED': 'Unrnk'
-  }[cat] || cat;
+  } as Record<string, string>)[cat] || cat;
 }
 
-export function baseTrackName(name) {
+export function baseTrackName(name: string): string {
   const idx = name.indexOf(' - ');
   return (idx !== -1 ? name.slice(0, idx) : name).trim();
 }
 
-export function isFixed(name) {
+export function isFixed(name: string): boolean {
   return /fixed/i.test(name);
 }
 
-export function parseDateStr(dateStr) {
+export function parseDateStr(dateStr: string): number {
   try { return new Date(dateStr + ', 2026').getTime(); } catch { return 0; }
 }
 
-export function getWeekDateRange(weekNum) {
+export function getWeekDateRange(weekNum: number): string {
   const seasonStart = new Date('2026-03-17');
   const start = new Date(seasonStart.getTime() + (weekNum - 1) * 7 * 24 * 60 * 60 * 1000);
   const end = new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000);
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const fmt = d => months[d.getMonth()] + ' ' + d.getDate();
+  const fmt = (d: Date) => months[d.getMonth()] + ' ' + d.getDate();
   return 'Week ' + weekNum + ' \u2014 ' + fmt(start) + ' \u2013 ' + fmt(end);
 }
 
-export function downloadFile(filename, content, mimeType) {
+export function downloadFile(filename: string, content: string, mimeType: string): void {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -71,17 +73,17 @@ export function downloadFile(filename, content, mimeType) {
   document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
-export function exportCSV(mySchedule) {
+export function exportCSV(mySchedule: MySchedule): void {
   const entries = Object.values(mySchedule);
   if (!entries.length) return;
   entries.sort((a, b) => a.weekNum !== b.weekNum ? a.weekNum - b.weekNum : a.displayName.localeCompare(b.displayName));
-  const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+  const esc = (v: unknown) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
   const rows = [['Week','Date','Series','Category','Class','Cars','Track','Laps'].map(esc).join(',')];
   entries.forEach(e => rows.push([e.weekNum, e.date, e.displayName, e.category, e.cls, e.cars, e.track, e.laps].map(esc).join(',')));
   downloadFile('iracing-2026s2-my-schedule.csv', rows.join('\n'), 'text/csv');
 }
 
-export function exportICS(mySchedule) {
+export function exportICS(mySchedule: MySchedule): void {
   const entries = Object.values(mySchedule);
   if (!entries.length) return;
   entries.sort((a, b) => parseDateStr(a.date) - parseDateStr(b.date));

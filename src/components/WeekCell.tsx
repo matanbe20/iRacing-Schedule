@@ -1,6 +1,7 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import { getCurrentWeek } from '../utils/schedule.js';
+import useStore from '../store/useStore';
+import { getCurrentWeek } from '../utils/schedule';
+import type { Series, Week } from '../types';
 
 const currentWeek = getCurrentWeek();
 
@@ -10,7 +11,12 @@ const RainDropSvg = () => (
   </svg>
 );
 
-export default function WeekCell({ series, week }) {
+interface WeekCellProps {
+  series: Series;
+  week: Week;
+}
+
+export default function WeekCell({ series, week }: WeekCellProps) {
   const mySchedule = useStore(s => s.mySchedule);
   const toggleRace = useStore(s => s.toggleRace);
 
@@ -18,7 +24,7 @@ export default function WeekCell({ series, week }) {
   const raceId = series.name + '_' + week.week;
   const isAdded = !!mySchedule[raceId];
 
-  function handleToggle(e) {
+  function handleToggle(e: React.MouseEvent) {
     e.stopPropagation();
     toggleRace(series.name, week.week);
   }
@@ -32,7 +38,7 @@ export default function WeekCell({ series, week }) {
       <div className="week-track">{week.track}</div>
       {week.car && <div className="week-meta" style={{ fontStyle: 'italic' }}>{week.car}</div>}
       {week.laps && <span className="week-laps">{week.laps}</span>}
-      {week.rain > 0 && (
+      {week.rain != null && week.rain > 0 && (
         <span className="week-rain">
           <RainDropSvg /> {week.rain}%
         </span>

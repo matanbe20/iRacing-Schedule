@@ -1,9 +1,9 @@
 import React, { useMemo, useEffect } from 'react';
-import useStore from '../store/useStore.js';
-import { SCHEDULE_DATA } from '../data.js';
-import { ALL_CLASSES } from '../store/useStore.js';
-import { cleanName, baseTrackName } from '../utils/helpers.js';
-import SeriesCard from './SeriesCard.jsx';
+import useStore from '../store/useStore';
+import { SCHEDULE_DATA } from '../data';
+import { ALL_CLASSES } from '../store/useStore';
+import { cleanName, baseTrackName } from '../utils/helpers';
+import SeriesCard from './SeriesCard';
 
 const CAT_ORDER = ['SPORTS CAR', 'FORMULA CAR', 'OVAL', 'DIRT OVAL', 'DIRT ROAD', 'UNRANKED'];
 

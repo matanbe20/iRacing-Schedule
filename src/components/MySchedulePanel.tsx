@@ -1,7 +1,8 @@
 import React from 'react';
-import useStore from '../store/useStore.js';
-import MyRaceCard from './MyRaceCard.jsx';
-import ExportButtons from './ExportButtons.jsx';
+import useStore from '../store/useStore';
+import MyRaceCard from './MyRaceCard';
+import ExportButtons from './ExportButtons';
+import type { RaceEntry } from '../types';
 
 export default function MySchedulePanel() {
   const mySchedule = useStore(s => s.mySchedule);
@@ -21,8 +22,8 @@ export default function MySchedulePanel() {
     return a.displayName.localeCompare(b.displayName);
   });
 
-  const groups = {};
-  const groupOrder = [];
+  const groups: Record<string, RaceEntry[]> = {};
+  const groupOrder: string[] = [];
   entries.forEach(e => {
     const key = 'Week ' + e.weekNum + ' \u2014 ' + e.date;
     if (!groups[key]) { groups[key] = []; groupOrder.push(key); }
