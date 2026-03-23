@@ -20,8 +20,6 @@ export default function TwCard({ series, week }: TwCardProps) {
   const raceId = series.name + '_' + week.week;
   const isAdded = !!mySchedule[raceId];
   const isFav = favorites.has(series.name);
-  const meta = [week.track, week.laps, series.cars].filter(Boolean).join(' · ');
-
   const trackOwned = ownedTracks.size > 0 && ownedTracks.has(baseTrackName(week.track));
   const seriesCars = series.cars.split(',').map(c => c.trim());
   const carOwned = ownedCars.size > 0 && seriesCars.some(c => ownedCars.has(c));
@@ -37,7 +35,12 @@ export default function TwCard({ series, week }: TwCardProps) {
       <span className={'class-badge ' + series.class}>{series.class}</span>
       <div className="tw-card-info">
         <div className="tw-card-title">{cleanName(series.name)}</div>
-        <div className="tw-card-meta">{meta}</div>
+        <div className="tw-card-meta">
+          <span className="tw-card-track">{week.track}</span>
+          {week.laps && <span className="tw-card-laps">{week.laps}</span>}
+          {week.rain != null && week.rain > 0 && <span className="week-rain">💧 {week.rain}%</span>}
+          {series.cars && <span className="tw-card-cars"> · {series.cars}</span>}
+        </div>
       </div>
       {carOwned && <span className="car-owned-badge" title="You own this car">✓ Car</span>}
       <button

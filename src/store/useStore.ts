@@ -205,7 +205,8 @@ function loadInitialState(): Partial<StoreState> {
             cars: series.cars,
             track: week.track,
             date: week.date,
-            laps: week.laps || ''
+            laps: week.laps || '',
+            rain: week.rain
           });
         });
         sharedEntries.sort((a, b) => {
@@ -467,7 +468,8 @@ const useStore = create<StoreState>((set, get) => ({
           cars: series.cars,
           track: week.track,
           date: week.date,
-          laps: week.laps || ''
+          laps: week.laps || '',
+          rain: week.rain
         }
       }
     }));
