@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://matanbe20.github.io/iRacing-Schedule/sitemap.xml

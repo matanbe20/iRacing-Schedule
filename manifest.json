@@ -1,0 +1,12 @@
+{
+  "name": "iRacing Schedule",
+  "short_name": "iRacing Sched",
+  "description": "Browse, filter, and plan your iRacing season schedule.",
+  "start_url": "/iRacing-Schedule/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#1e2235",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
