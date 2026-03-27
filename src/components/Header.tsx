@@ -52,7 +52,7 @@ export default function Header() {
           <img src="https://storage.ko-fi.com/cdn/logomarkLogo.png" alt="Ko-fi" />
         </a>
         <div className="header-left">
-          <h1><span>iRacing</span> Schedule</h1>
+          <h1><span>iRacing</span> Hub</h1>
           <p className="season-label" id="season-label">{SEASON_LABEL}</p>
           <p className="subtitle" id="season-dates">{SEASON_DATES}</p>
         </div>
