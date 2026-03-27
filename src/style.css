@@ -611,9 +611,10 @@ body {
 .week-cell {
   background: var(--surface);
   padding: 0.3rem 0.6rem;
-  border-radius: 5px;
-  border: 1px solid var(--border);
-  box-shadow: var(--week-cell-shadow);
+  border-radius: 3px;
+  border: none;
+  border-left: 3px solid var(--border);
+  box-shadow: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
