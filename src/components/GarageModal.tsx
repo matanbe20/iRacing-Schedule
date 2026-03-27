@@ -38,6 +38,7 @@ export default function GarageModal() {
   const [search, setSearch] = useState('');
   const [localCars, setLocalCars] = useState<Set<string>>(new Set());
   const [localTracks, setLocalTracks] = useState<Set<string>>(new Set());
+  const [garageCopied, setGarageCopied] = useState(false);
 
   // Sync local state from store when opening
   const [prevOpen, setPrevOpen] = useState(false);
@@ -97,6 +98,21 @@ export default function GarageModal() {
     setOwnedCars(new Set(localCars));
     setOwnedTracks(new Set(localTracks));
     closeGarageModal();
+  }
+
+  function handleShareGarage() {
+    const encoded = btoa(JSON.stringify({ cars: [...ownedCars], tracks: [...ownedTracks] }));
+    const url = location.origin + location.pathname + '?garage=' + encoded;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        setGarageCopied(true);
+        setTimeout(() => setGarageCopied(false), 2000);
+      }).catch(() => { prompt('Copy this URL:', url); });
+    } else {
+      prompt('Copy this URL:', url);
+      setGarageCopied(true);
+      setTimeout(() => setGarageCopied(false), 2000);
+    }
   }
 
   function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -178,8 +194,13 @@ export default function GarageModal() {
         </div>
 
         <div className="garage-modal-footer">
-          <button className="garage-cancel-btn" onClick={closeGarageModal}>Cancel</button>
-          <button className="garage-save-btn" onClick={handleSave}>Save</button>
+          <button className={'garage-share-btn' + (garageCopied ? ' copied' : '')} onClick={handleShareGarage}>
+            {garageCopied ? '✓ Copied!' : 'Share Garage'}
+          </button>
+          <div className="garage-footer-right">
+            <button className="garage-cancel-btn" onClick={closeGarageModal}>Cancel</button>
+            <button className="garage-save-btn" onClick={handleSave}>Save</button>
+          </div>
         </div>
       </div>
     </div>

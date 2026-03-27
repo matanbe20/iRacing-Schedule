@@ -39,6 +39,11 @@ export interface StoreState {
   ownedTracks: Set<string>;
   isGarageModalOpen: boolean;
 
+  // Shared garage
+  isGarageShareModalOpen: boolean;
+  sharedGarageCars: string[];
+  sharedGarageTracks: string[];
+
   // Filtered count
   filteredCount: number;
 
@@ -67,6 +72,9 @@ export interface StoreState {
   setOwnedTracks(tracks: Set<string>): void;
   openGarageModal(): void;
   closeGarageModal(): void;
+  openGarageShareModal(cars: string[], tracks: string[]): void;
+  closeGarageShareModal(): void;
+  mergeSharedGarage(): void;
 
   // Navigation
   setActiveTab: (tab: Tab) => void;
@@ -222,7 +230,24 @@ function loadInitialState(): Partial<StoreState> {
     history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
   }
 
-  return { ...filters, mySchedule, favorites, ownedCars, ownedTracks, theme, activeTab, sharedEntries, isShareModalOpen };
+  let sharedGarageCars: string[] = [];
+  let sharedGarageTracks: string[] = [];
+  let isGarageShareModalOpen = false;
+  const garageParam = params.get('garage');
+  if (garageParam) {
+    try {
+      const parsed = JSON.parse(atob(garageParam));
+      if (parsed && Array.isArray(parsed.cars)) sharedGarageCars = parsed.cars.filter((c: unknown) => typeof c === 'string');
+      if (parsed && Array.isArray(parsed.tracks)) sharedGarageTracks = parsed.tracks.filter((t: unknown) => typeof t === 'string');
+      if (sharedGarageCars.length > 0 || sharedGarageTracks.length > 0) isGarageShareModalOpen = true;
+    } catch { /* ignore */ }
+    const cleanParams = new URLSearchParams(window.location.search);
+    cleanParams.delete('garage');
+    const qs = cleanParams.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+  }
+
+  return { ...filters, mySchedule, favorites, ownedCars, ownedTracks, theme, activeTab, sharedEntries, isShareModalOpen, sharedGarageCars, sharedGarageTracks, isGarageShareModalOpen };
 }
 
 function syncUrlParams(state: StoreState): void {
@@ -285,6 +310,9 @@ const useStore = create<StoreState>((set, get) => ({
   ownedCars: initialState.ownedCars ?? new Set(FREE_CARS),
   ownedTracks: initialState.ownedTracks ?? new Set(FREE_TRACKS),
   isGarageModalOpen: false,
+  isGarageShareModalOpen: initialState.isGarageShareModalOpen ?? false,
+  sharedGarageCars: initialState.sharedGarageCars ?? [],
+  sharedGarageTracks: initialState.sharedGarageTracks ?? [],
 
   // Filter actions
   toggleCategory(cat) {
@@ -432,6 +460,23 @@ const useStore = create<StoreState>((set, get) => ({
 
   openGarageModal() { set({ isGarageModalOpen: true }); },
   closeGarageModal() { set({ isGarageModalOpen: false }); },
+
+  openGarageShareModal(cars, tracks) { set({ sharedGarageCars: cars, sharedGarageTracks: tracks, isGarageShareModalOpen: true }); },
+  closeGarageShareModal() { set({ isGarageShareModalOpen: false }); },
+
+  mergeSharedGarage() {
+    const { sharedGarageCars, sharedGarageTracks, ownedCars, ownedTracks } = get();
+    const addedCars = sharedGarageCars.filter(c => !ownedCars.has(c)).length;
+    const addedTracks = sharedGarageTracks.filter(t => !ownedTracks.has(t)).length;
+    const newCars = new Set([...ownedCars, ...sharedGarageCars]);
+    const newTracks = new Set([...ownedTracks, ...sharedGarageTracks]);
+    set({ ownedCars: newCars, ownedTracks: newTracks, isGarageShareModalOpen: false });
+    saveOwned(get());
+    const parts = [];
+    if (addedCars > 0) parts.push(addedCars + ' car' + (addedCars !== 1 ? 's' : ''));
+    if (addedTracks > 0) parts.push(addedTracks + ' track' + (addedTracks !== 1 ? 's' : ''));
+    if (parts.length > 0) get().showToast(parts.join(' and ') + ' added to your garage');
+  },
 
   // Navigation
   setActiveTab(tab) {

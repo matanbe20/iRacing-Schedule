@@ -1183,11 +1183,29 @@ body {
 .garage-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 0.75rem;
   padding: 0.875rem 1.25rem;
   border-top: 1px solid var(--border);
 }
+.garage-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.garage-share-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.garage-share-btn:hover { color: var(--text); border-color: var(--text-dim); }
+.garage-share-btn.copied { background: #16a34a; border-color: #16a34a; color: #fff; }
 .garage-cancel-btn {
   background: none;
   border: 1px solid var(--border);
@@ -1214,6 +1232,47 @@ body {
 
 /* Share button */
 .export-btn-copied { background: #16a34a !important; border-color: #16a34a !important; color: #fff !important; }
+
+/* Shared Garage Modal */
+.shared-garage-section { margin-bottom: 0.5rem; }
+.shared-garage-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  padding: 0.5rem 0.75rem 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.shared-garage-count {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.7rem;
+  padding: 0 0.4rem;
+  color: var(--text-dim);
+}
+.shared-garage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  gap: 0.5rem;
+}
+.shared-garage-item.owned { opacity: 0.5; }
+.shared-garage-name { font-size: 0.875rem; color: var(--text); }
+.shared-garage-owned-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  flex-shrink: 0;
+}
 
 /* Toast notification */
 .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(6px); background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.85rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 500; white-space: nowrap; }
