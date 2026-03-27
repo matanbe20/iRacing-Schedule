@@ -485,7 +485,6 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: hidden;
   transition: border-color 0.15s;
 }
 
@@ -498,6 +497,7 @@ body {
   align-items: center;
   gap: 0.75rem;
   user-select: none;
+  border-radius: 7px 7px 0 0;
 }
 
 .series-header:hover { background: var(--surface2); }
