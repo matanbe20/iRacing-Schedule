@@ -948,7 +948,7 @@ body {
 .tw-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; position: relative; transition: border-color 0.15s; }
 .tw-card:hover { border-color: #3d4260; }
 .tw-card-info { flex: 1; min-width: 0; }
-.tw-card-title { font-weight: 600; font-size: 0.875rem; }
+.tw-card-title { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tw-card-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 .tw-card-track { font-weight: 700; color: var(--text); font-size: 0.8rem; }
 .tw-card-laps { font-size: 0.7rem; font-weight: 600; color: #f59e0b; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); border-radius: 4px; padding: 0.05rem 0.35rem; letter-spacing: 0.03em; }
