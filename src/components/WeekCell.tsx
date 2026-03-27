@@ -34,22 +34,18 @@ export default function WeekCell({ series, week }: WeekCellProps) {
   }
 
   return (
-    <div className={'week-cell' + (isCurrent ? ' current' : '')} style={{ paddingBottom: '1.8rem' }}>
-      <div className="week-num">
-        Week {week.week} {isCurrent ? '(Current)' : ''}
-        <span style={{ float: 'right', color: 'var(--text-dim)', fontWeight: 400 }}>{week.date}</span>
-      </div>
-      <div className="week-track">
+    <div className={'week-cell' + (isCurrent ? ' current' : '')}>
+      <span className="week-num">Wk {week.week}{isCurrent ? ' ★' : ''}</span>
+      <span className="week-date">{week.date}</span>
+      <span className="week-track">
         {week.track}
         {isOwned && <span className="track-owned-badge">Owned</span>}
-      </div>
-      {week.car && <div className="week-meta"><CarBadges cars={week.car} /></div>}
+      </span>
       {week.laps && <span className="week-laps">{week.laps}</span>}
       {week.rain != null && week.rain > 0 && (
-        <span className="week-rain">
-          <RainDropSvg /> {week.rain}%
-        </span>
+        <span className="week-rain"><RainDropSvg /> {week.rain}%</span>
       )}
+      {week.car && <CarBadges cars={week.car} />}
       <button
         className={'week-add-btn' + (isAdded ? ' added' : '')}
         data-raw-name={series.name}

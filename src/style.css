@@ -610,10 +610,15 @@ body {
 
 .week-cell {
   background: var(--surface);
-  padding: 0.75rem 0.9rem;
-  border-radius: 7px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
   border: 1px solid var(--border);
   box-shadow: var(--week-cell-shadow);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .week-cell.current {
@@ -645,21 +650,33 @@ body {
 }
 
 .week-num {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--accent);
-  margin-bottom: 0.15rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .week-cell.current .week-num {
   color: #60a5fa;
 }
 
+.week-date {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .week-track {
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--text);
-  margin-top: 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
 }
 
 .week-meta {
@@ -671,28 +688,29 @@ body {
 
 .week-laps {
   display: inline-block;
-  margin-top: 0.3rem;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #f59e0b;
   background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 4px;
-  padding: 0.08rem 0.4rem;
+  padding: 0.05rem 0.35rem;
   letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .week-rain {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin-top: 0.25rem;
-  margin-left: 0.3rem;
-  font-size: 0.67rem;
+  font-size: 0.65rem;
   color: #60a5fa;
   background: rgba(96, 165, 250, 0.1);
   border: 1px solid rgba(96, 165, 250, 0.25);
   border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
   padding: 0.05rem 0.35rem;
   letter-spacing: 0.02em;
   vertical-align: middle;
@@ -789,14 +807,11 @@ body {
 .series-add-btn.added { background: #16a34a; border-color: #16a34a; color: #fff; }
 
 /* Week add button */
-.week-cell { position: relative; }
-
 .week-add-btn {
-  position: absolute;
-  bottom: 0.4rem;
-  right: 0.4rem;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-left: auto;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--surface2);
