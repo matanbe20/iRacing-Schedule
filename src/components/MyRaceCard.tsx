@@ -13,7 +13,9 @@ export default function MyRaceCard({ entry }: MyRaceCardProps) {
   const clearTrackFilter = useStore(s => s.clearTrackFilter);
   const addTrackFilter = useStore(s => s.addTrackFilter);
   const setActiveTab = useStore(s => s.setActiveTab);
+  const ownedTracks = useStore(s => s.ownedTracks);
   const cc = catClass(entry.category);
+  const trackOwned = ownedTracks.size > 0 && ownedTracks.has(baseTrackName(entry.track));
 
   function handleTrackClick(e: React.MouseEvent) {
     e.stopPropagation();
@@ -29,7 +31,7 @@ export default function MyRaceCard({ entry }: MyRaceCardProps) {
       <div className="my-race-info">
         <div className="my-race-title">{entry.displayName}</div>
         <div className="my-race-meta">
-          <span className="my-race-track-badge" onClick={handleTrackClick} title="Filter by this track">{entry.track}</span>
+          <span className="my-race-track-badge" onClick={handleTrackClick} title="Filter by this track">{entry.track}{trackOwned && <span className="track-owned-badge">Owned</span>}</span>
           {entry.laps && <span className="tw-card-laps">{entry.laps}</span>}
           {entry.rain != null && entry.rain > 0 && <span className="week-rain">💧 {entry.rain}%</span>}
           {entry.cars && <CarBadges cars={entry.cars} />}
