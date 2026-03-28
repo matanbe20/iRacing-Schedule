@@ -183,8 +183,8 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
 
   return (
     <div className="se-live-hero">
-      <div className="se-live-hero-stream">
-        {videoId ? (
+      {videoId && (
+        <div className="se-live-hero-stream">
           <iframe
             className="se-live-hero-iframe"
             src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&rel=0&hl=en&cc_lang_pref=en&modestbranding=1`}
@@ -192,18 +192,8 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
-        ) : (
-          <a
-            className="se-live-hero-yt-fallback"
-            href={`https://www.youtube.com/@iRacingOfficial/live`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2s-.2-1.6-1-2.3c-.9-1-1.9-1-2.4-1C17.2 2.7 12 2.7 12 2.7s-5.2 0-8.1.2c-.5.1-1.5.1-2.4 1-.7.7-1 2.3-1 2.3S.3 8 .3 9.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.6 1 2.3c.9 1 2.1.9 2.6 1C5.8 18.6 12 18.6 12 18.6s5.2 0 8.1-.2c.5-.1 1.5-.1 2.4-1 .7-.7 1-2.3 1-2.3s.2-1.8.2-3.6V9.8c0-1.8-.2-3.6-.2-3.6zM9.7 14.5V7.9l6.6 3.3-6.6 3.3z"/></svg>
-            <span>Watch Live on YouTube</span>
-          </a>
-        )}
-      </div>
+        </div>
+      )}
       <div className="se-live-hero-body">
         <img
           className="se-live-hero-event-banner"
@@ -225,16 +215,17 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
             <span>🏁 {event.track}</span>
             <span>🚗 {event.cars}</span>
           </div>
-          {(event.posterUrl || event.forumUrl) && (
-            <div className="se-card-links">
-              {event.posterUrl && (
-                <a className="se-card-link" href={event.posterUrl} target="_blank" rel="noopener noreferrer">Poster ↗</a>
-              )}
-              {event.forumUrl && (
-                <a className="se-card-link" href={event.forumUrl} target="_blank" rel="noopener noreferrer">Forum ↗</a>
-              )}
-            </div>
-          )}
+          <div className="se-card-links">
+            {!videoId && (
+              <a className="se-card-link se-card-link--yt" href="https://www.youtube.com/@iRacingOfficial/live" target="_blank" rel="noopener noreferrer">▶ Watch Live ↗</a>
+            )}
+            {event.posterUrl && (
+              <a className="se-card-link" href={event.posterUrl} target="_blank" rel="noopener noreferrer">Poster ↗</a>
+            )}
+            {event.forumUrl && (
+              <a className="se-card-link" href={event.forumUrl} target="_blank" rel="noopener noreferrer">Forum ↗</a>
+            )}
+          </div>
         </div>
       </div>
     </div>
