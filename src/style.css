@@ -1973,7 +1973,7 @@ body.share-modal-open { overflow: hidden; }
 }
 
 .se-live-hero-title {
-  font-size: 1.35rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text);
   line-height: 1.2;
@@ -1983,7 +1983,7 @@ body.share-modal-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   color: var(--text-dim);
 }
 
@@ -1991,5 +1991,5 @@ body.share-modal-open { overflow: hidden; }
   .se-live-hero { flex-direction: column; }
   .se-live-hero-banner { width: 100%; min-height: 130px; }
   .se-live-hero-overlay { background: linear-gradient(to bottom, transparent 60%, var(--surface)); }
-  .se-live-hero-title { font-size: 1.1rem; }
+  .se-live-hero-title { font-size: 1.35rem; }
 }
