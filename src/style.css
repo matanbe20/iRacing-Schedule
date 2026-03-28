@@ -1924,10 +1924,10 @@ body.share-modal-open { overflow: hidden; }
 }
 
 .se-card-link--yt {
-  color: #ff4444;
-  border-color: rgba(255, 68, 68, 0.3);
+  color: #9147ff;
+  border-color: rgba(145, 71, 255, 0.3);
 }
-.se-card-link--yt:hover { background: rgba(255, 68, 68, 0.08); }
+.se-card-link--yt:hover { background: rgba(145, 71, 255, 0.08); }
 
 .se-live-hero-iframe {
   position: absolute;
