@@ -187,9 +187,9 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
         <div className="se-live-hero-stream">
           <iframe
             className="se-live-hero-iframe"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`}
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&rel=0&hl=en&cc_lang_pref=en&modestbranding=1`}
             title={`${event.name} — Live Stream`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         </div>
