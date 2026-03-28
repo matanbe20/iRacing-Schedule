@@ -212,9 +212,8 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
             <span>🚗 {event.cars}</span>
           </div>
           <div className="se-card-links">
-            {!videoId && (
-              <a className="se-card-link se-card-link--yt" href={IRACING_YT_LIVE_URL} target="_blank" rel="noopener noreferrer">▶ Watch on YouTube ↗</a>
-            )}
+            <a className="se-card-link se-card-link--yt" href={IRACING_YT_LIVE_URL} target="_blank" rel="noopener noreferrer">▶ YouTube ↗</a>
+            <a className="se-card-link se-card-link--twitch" href="https://www.twitch.tv/iracing" target="_blank" rel="noopener noreferrer">▶ Twitch ↗</a>
             {event.posterUrl && (
               <a className="se-card-link" href={event.posterUrl} target="_blank" rel="noopener noreferrer">Poster ↗</a>
             )}
