@@ -212,8 +212,14 @@ function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
             <span>🚗 {event.cars}</span>
           </div>
           <div className="se-card-links">
-            <a className="se-card-link se-card-link--yt" href={IRACING_YT_LIVE_URL} target="_blank" rel="noopener noreferrer">▶ YouTube ↗</a>
-            <a className="se-card-link se-card-link--twitch" href="https://www.twitch.tv/iracing" target="_blank" rel="noopener noreferrer">▶ Twitch ↗</a>
+            <a className="se-card-link se-card-link--yt" href={IRACING_YT_LIVE_URL} target="_blank" rel="noopener noreferrer">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2s-.2-1.6-1-2.3c-.9-1-1.9-1-2.4-1C17.2 2.7 12 2.7 12 2.7s-5.2 0-8.1.2c-.5.1-1.5.1-2.4 1-.7.7-1 2.3-1 2.3S.3 8 .3 9.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.6 1 2.3c.9 1 2.1.9 2.6 1C5.8 18.6 12 18.6 12 18.6s5.2 0 8.1-.2c.5-.1 1.5-.1 2.4-1 .7-.7 1-2.3 1-2.3s.2-1.8.2-3.6V9.8c0-1.8-.2-3.6-.2-3.6zM9.7 14.5V7.9l6.6 3.3-6.6 3.3z"/></svg>
+              YouTube ↗
+            </a>
+            <a className="se-card-link se-card-link--twitch" href="https://www.twitch.tv/iracing" target="_blank" rel="noopener noreferrer">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+              Twitch ↗
+            </a>
             {event.posterUrl && (
               <a className="se-card-link" href={event.posterUrl} target="_blank" rel="noopener noreferrer">Poster ↗</a>
             )}

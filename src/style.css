@@ -1739,6 +1739,9 @@ body.share-modal-open { overflow: hidden; }
   border: 1px solid var(--border);
   border-radius: 4px;
   transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 .se-card-link:hover { background: var(--accent-glow); }
 
