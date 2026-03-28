@@ -2005,6 +2005,5 @@ body.share-modal-open { overflow: hidden; }
 
 @media (max-width: 600px) {
   .se-live-hero-title { font-size: 1.35rem; }
-  .se-live-hero-body { flex-direction: column; align-items: stretch; }
-  .se-live-hero-event-banner { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .se-live-hero-event-banner { width: 110px; height: 62px; }
 }
