@@ -166,8 +166,18 @@ function useLiveVideoId() {
     fetch(proxy)
       .then(r => r.text())
       .then(html => {
-        const match = html.match(/rel="canonical"\s+href="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"/);
-        setVideoId(match ? match[1] : null);
+        const patterns = [
+          /rel="canonical"[^>]*href="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"/,
+          /href="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"[^>]*rel="canonical"/,
+          /"og:url"[^>]*content="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"/,
+          /property="og:url"\s+content="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"/,
+          /"canonicalBaseUrl":"\/watch\?v=([a-zA-Z0-9_-]{11})"/,
+        ];
+        for (const pattern of patterns) {
+          const match = html.match(pattern);
+          if (match) { setVideoId(match[1]); return; }
+        }
+        setVideoId(null);
       })
       .catch(() => {});
   }, []);
