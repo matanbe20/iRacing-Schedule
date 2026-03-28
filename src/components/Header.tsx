@@ -24,13 +24,11 @@ export default function Header() {
   const theme = useStore(s => s.theme);
   const toggleTheme = useStore(s => s.toggleTheme);
   const openDrawer = useStore(s => s.openDrawer);
-  const filteredCount = useStore(s => s.filteredCount);
   const activeCategories = useStore(s => s.activeCategories);
   const activeClasses = useStore(s => s.activeClasses);
   const activeCars = useStore(s => s.activeCars);
   const activeTracks = useStore(s => s.activeTracks);
   const searchQuery = useStore(s => s.searchQuery);
-  const activeTab = useStore(s => s.activeTab);
 
   const filterCount =
     (ALL_CATEGORIES.every(c => activeCategories.has(c)) ? 0 : 1) +
@@ -68,9 +66,6 @@ export default function Header() {
               {filterCount > 0 ? String(filterCount) : ''}
             </span>
           </button>
-          {activeTab === 'all' && (
-            <span className="stats" id="stats">{filteredCount} series</span>
-          )}
           <button
             className="theme-toggle"
             id="theme-toggle"

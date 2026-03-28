@@ -296,10 +296,10 @@ body {
 }
 
 .stats {
-  margin-left: auto;
+  display: block;
   font-size: 0.8rem;
   color: var(--text-dim);
-  align-self: center;
+  margin-bottom: 0.5rem;
 }
 
 .theme-toggle {
@@ -797,6 +797,7 @@ body {
   font-family: inherit;
   display: flex;
   align-items: center;
+  position: relative;
   gap: 0.5rem;
   transition: color 0.15s, border-color 0.15s;
 }
@@ -1501,7 +1502,6 @@ body.share-modal-open { overflow: hidden; }
   .search-box { flex: 1; min-width: 0; padding: 0.35rem 0.75rem 0.35rem 2.25rem; font-size: 0.8rem; border-radius: 6px; box-shadow: none; }
   .search-typewriter { display: none; }
   .search-icon-svg { width: 14px; height: 14px; left: 0.65rem; }
-  .stats { display: none; }
   .week-grid { grid-template-columns: 1fr; }
 
   .mobile-filter-btn {
@@ -1569,6 +1569,18 @@ body.share-modal-open { overflow: hidden; }
   .content-area { width: 100%; }
 
   .main-layout { flex-direction: column; }
+}
+
+/* Live event indicator dot on Events tab */
+.tab-live-dot {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: se-pulse 1.2s ease-in-out infinite;
 }
 
 /* ── Special Events Tab ──────────────────────────────────────────────────── */

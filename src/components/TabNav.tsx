@@ -1,12 +1,22 @@
 import React from 'react';
 import useStore from '../store/useStore';
 import type { Tab } from '../types';
+import { SPECIAL_EVENTS } from '../data/special-events';
 
 export default function TabNav() {
   const activeTab = useStore(s => s.activeTab);
   const setActiveTab = useStore(s => s.setActiveTab);
   const mySchedule = useStore(s => s.mySchedule);
   const count = Object.keys(mySchedule).length;
+
+  const now = new Date();
+  const hasLiveEvent = SPECIAL_EVENTS.some(e => {
+    if (!e.startDate) return false;
+    const start = new Date(e.startDate);
+    const end = new Date(e.endDate);
+    end.setHours(23, 59, 59, 999);
+    return now >= start && now <= end;
+  });
 
   return (
     <div className="tab-nav">
@@ -40,7 +50,7 @@ export default function TabNav() {
           id="tab-events"
           onClick={() => setActiveTab('events' as Tab)}
         >
-          Events
+          Special Events{hasLiveEvent && <span className="tab-live-dot" />}
         </button>
       </div>
     </div>

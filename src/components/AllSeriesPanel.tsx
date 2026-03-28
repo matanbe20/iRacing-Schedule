@@ -57,7 +57,9 @@ export default function AllSeriesPanel() {
   }, [filtered.length]);
 
   return (
-    <div className="series-grid">
+    <>
+      <span className="stats" id="stats">{filtered.length} series</span>
+      <div className="series-grid">
       {filtered.length === 0 ? (
         <div className="no-results">
           No series match your filters<br />
@@ -66,6 +68,7 @@ export default function AllSeriesPanel() {
       ) : (
         filtered.map(s => <SeriesCard key={s.name} series={s} />)
       )}
-    </div>
+      </div>
+    </>
   );
 }

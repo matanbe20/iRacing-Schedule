@@ -199,7 +199,7 @@ export default function SpecialEventsPanel() {
     <div className="se-panel">
       <div className="se-panel-toolbar">
         <div className="se-section-header" style={{ border: 'none', margin: 0, padding: 0 }}>
-          <h2>Upcoming Events</h2>
+          <h2>Upcoming iRacing Special Events</h2>
           <span className="se-event-count">{upcoming.length} events</span>
         </div>
         <div className="se-view-toggle">
