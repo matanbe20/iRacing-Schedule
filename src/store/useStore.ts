@@ -215,6 +215,7 @@ function loadInitialState(): Partial<StoreState> {
   let activeTab: Tab = 'all';
   if (tabParam === 'my') activeTab = 'my';
   else if (tabParam === 'week') activeTab = 'week';
+  else if (tabParam === 'events') activeTab = 'events';
 
   let sharedEntries: RaceEntry[] = [];
   let isShareModalOpen = false;
@@ -287,7 +288,7 @@ function syncUrlParams(state: StoreState): void {
   if (state.searchQuery) params.set('q', state.searchQuery);
   if (state.activeCars.size > 0) params.set('cars', [...state.activeCars].join(','));
   if (state.activeTracks.size > 0) params.set('tracks', [...state.activeTracks].join(','));
-  if (state.activeTab === 'my' || state.activeTab === 'week') params.set('tab', state.activeTab);
+  if (state.activeTab === 'my' || state.activeTab === 'week' || state.activeTab === 'events') params.set('tab', state.activeTab);
 
   const qs = params.toString();
   const url = window.location.pathname + (qs ? '?' + qs : '');

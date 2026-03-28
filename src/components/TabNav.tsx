@@ -35,6 +35,13 @@ export default function TabNav() {
             {count > 0 ? String(count) : ''}
           </span>
         </button>
+        <button
+          className={'tab-btn' + (activeTab === 'events' ? ' active' : '')}
+          id="tab-events"
+          onClick={() => setActiveTab('events' as Tab)}
+        >
+          Events
+        </button>
       </div>
     </div>
   );

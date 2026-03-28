@@ -1,6 +1,6 @@
 export type Category = 'OVAL' | 'SPORTS CAR' | 'FORMULA CAR' | 'DIRT OVAL' | 'DIRT ROAD' | 'UNRANKED';
 export type SeriesClass = 'R' | 'D' | 'C' | 'B' | 'A';
-export type Tab = 'all' | 'week' | 'my';
+export type Tab = 'all' | 'week' | 'my' | 'events';
 export type Theme = 'dark' | 'light';
 
 export interface Week {
