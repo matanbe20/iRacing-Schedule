@@ -156,6 +156,44 @@ function SpecialEventCard({ event, now, view }: CardProps) {
   );
 }
 
+function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
+  return (
+    <div className="se-live-hero">
+      <div className="se-live-hero-banner">
+        <img
+          src={event.bannerUrl}
+          alt={event.name}
+          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
+        <div className="se-live-hero-overlay" />
+        <span className="se-live-hero-badge">
+          <span className="se-live-hero-dot" />
+          Live Now
+        </span>
+      </div>
+      <div className="se-live-hero-body">
+        <span className={`se-type-badge ${typeBadgeClass(event.type)}`}>{typeLabel(event.type)}</span>
+        <div className="se-live-hero-title">{event.name}</div>
+        <div className="se-live-hero-meta">
+          <span>📅 {formatDateRange(event.startDate, event.endDate)}</span>
+          <span>🏁 {event.track}</span>
+          <span>🚗 {event.cars}</span>
+        </div>
+        {(event.posterUrl || event.forumUrl) && (
+          <div className="se-card-links">
+            {event.posterUrl && (
+              <a className="se-card-link" href={event.posterUrl} target="_blank" rel="noopener noreferrer">Poster ↗</a>
+            )}
+            {event.forumUrl && (
+              <a className="se-card-link" href={event.forumUrl} target="_blank" rel="noopener noreferrer">Forum ↗</a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Grid icon SVG
 function GridIcon() {
   return (
@@ -183,7 +221,9 @@ export default function SpecialEventsPanel() {
   const [view, setView] = useState<ViewMode>('grid');
   const now = new Date();
 
-  const upcoming = [...SPECIAL_EVENTS.filter(e => !e.past)].sort((a, b) => {
+  const liveEvents = SPECIAL_EVENTS.filter(e => getStatus(e, now) === 'active');
+
+  const upcoming = [...SPECIAL_EVENTS.filter(e => !e.past && getStatus(e, now) !== 'active')].sort((a, b) => {
     if (!a.startDate) return 1;
     if (!b.startDate) return -1;
     return a.startDate.localeCompare(b.startDate);
@@ -197,6 +237,16 @@ export default function SpecialEventsPanel() {
 
   return (
     <div className="se-panel">
+      {liveEvents.length > 0 && (
+        <div className="se-live-section">
+          <div className="se-live-section-label">
+            <span className="se-live-section-dot" />
+            Happening Now
+          </div>
+          {liveEvents.map(e => <LiveEventHero key={e.id} event={e} now={now} />)}
+        </div>
+      )}
+
       <div className="se-panel-toolbar">
         <div className="se-section-header" style={{ border: 'none', margin: 0, padding: 0 }}>
           <h2>Upcoming iRacing Special Events</h2>
