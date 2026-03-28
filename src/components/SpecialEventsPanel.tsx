@@ -166,7 +166,7 @@ function useLiveVideoId() {
     fetch(proxy)
       .then(r => r.text())
       .then(html => {
-        const match = html.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+        const match = html.match(/rel="canonical"\s+href="https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"/);
         setVideoId(match ? match[1] : null);
       })
       .catch(() => {});
