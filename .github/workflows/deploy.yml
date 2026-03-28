@@ -26,6 +26,7 @@ jobs:
         run: npm run build
         env:
           VITE_BASE: /
+          VITE_YOUTUBE_API_KEY: ${{ secrets.VITE_YOUTUBE_API_KEY }}
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
