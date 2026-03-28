@@ -156,23 +156,28 @@ function SpecialEventCard({ event, now, view }: CardProps) {
   );
 }
 
+const IRACING_YT_CHANNEL_ID = 'UCPEcqkRG-kf2Vk6Rn_2WZSQ';
+
 function LiveEventHero({ event, now }: { event: SpecialEvent; now: Date }) {
   return (
     <div className="se-live-hero">
-      <div className="se-live-hero-banner">
-        <img
-          src={event.bannerUrl}
-          alt={event.name}
-          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+      <div className="se-live-hero-stream">
+        <iframe
+          className="se-live-hero-iframe"
+          src={`https://www.youtube.com/embed/live_stream?channel=${IRACING_YT_CHANNEL_ID}&autoplay=1&mute=1`}
+          title={`${event.name} — Live Stream`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
         />
-        <div className="se-live-hero-overlay" />
-        <span className="se-live-hero-badge">
-          <span className="se-live-hero-dot" />
-          Live Now
-        </span>
       </div>
       <div className="se-live-hero-body">
-        <span className={`se-type-badge ${typeBadgeClass(event.type)}`}>{typeLabel(event.type)}</span>
+        <div className="se-live-hero-top">
+          <span className="se-live-hero-badge">
+            <span className="se-live-hero-dot" />
+            Live Now
+          </span>
+          <span className={`se-type-badge ${typeBadgeClass(event.type)}`}>{typeLabel(event.type)}</span>
+        </div>
         <div className="se-live-hero-title">{event.name}</div>
         <div className="se-live-hero-meta">
           <span>📅 {formatDateRange(event.startDate, event.endDate)}</span>
