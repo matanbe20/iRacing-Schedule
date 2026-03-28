@@ -276,11 +276,15 @@ export default function SpecialEventsPanel() {
     <div className="se-panel">
       {liveEvents.length > 0 && (
         <div className="se-live-section">
-          <div className="se-live-section-label">
-            <span className="se-live-section-dot" />
-            Happening Now
-          </div>
-          {liveEvents.map(e => <LiveEventHero key={e.id} event={e} now={now} />)}
+          {liveEvents.map(e => (
+            <React.Fragment key={e.id}>
+              <div className="se-live-section-label">
+                <span className="se-live-section-dot" />
+                Live {e.name}
+              </div>
+              <LiveEventHero event={e} now={now} />
+            </React.Fragment>
+          ))}
         </div>
       )}
 
