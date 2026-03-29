@@ -20,6 +20,8 @@ export default function ThisWeekPanel() {
   const ownedCars = useStore(s => s.ownedCars);
   const ownedTracks = useStore(s => s.ownedTracks);
   const favorites = useStore(s => s.favorites);
+  const selectedWeek = useStore(s => s.selectedWeek);
+  const setSelectedWeek = useStore(s => s.setSelectedWeek);
 
   const results = useMemo(() => {
     const q = searchQuery.toLowerCase();
@@ -30,7 +32,7 @@ export default function ThisWeekPanel() {
         const seriesCars = s.cars.split(',').map(c => c.trim());
         if (!seriesCars.some(c => activeCars.has(c))) return false;
       }
-      const week = s.weeks.find(w => w.week === currentWeek);
+      const week = s.weeks.find(w => w.week === selectedWeek);
       if (!week) return false;
       if (activeTracks.size > 0 && !activeTracks.has(baseTrackName(week.track))) return false;
       if (filterOwnedCars && ownedCars.size > 0) {
@@ -43,10 +45,10 @@ export default function ThisWeekPanel() {
         if (!haystack.includes(q)) return false;
       }
       return true;
-    }).map(s => ({ s, week: s.weeks.find(w => w.week === currentWeek) as Week }));
-  }, [activeCategories, activeClasses, searchQuery, activeCars, activeTracks, filterOwnedCars, filterOwnedTracks, ownedCars, ownedTracks]);
+    }).map(s => ({ s, week: s.weeks.find(w => w.week === selectedWeek) as Week }));
+  }, [activeCategories, activeClasses, searchQuery, activeCars, activeTracks, filterOwnedCars, filterOwnedTracks, ownedCars, ownedTracks, selectedWeek]);
 
-  const dateRange = getWeekDateRange(currentWeek);
+  const dateRange = getWeekDateRange(selectedWeek);
   const favResults = results.filter(r => favorites.has(r.s.name));
   const otherResults = results.filter(r => !favorites.has(r.s.name));
 
@@ -56,6 +58,23 @@ export default function ThisWeekPanel() {
 
   return (
     <div>
+      <div className="week-selector">
+        <span className="week-selector-label">Week</span>
+        {Array.from({ length: 12 }, (_, i) => i + 1).map(w => (
+          <button
+            key={w}
+            className={
+              'week-btn' +
+              (w === selectedWeek ? ' active' : '') +
+              (w === currentWeek && w !== selectedWeek ? ' current' : '')
+            }
+            onClick={() => setSelectedWeek(w)}
+          >
+            {w}
+          </button>
+        ))}
+      </div>
+
       <div className="week-view-header">
         <span className="week-view-title">{dateRange}</span>
         <span className="week-view-count">{results.length} series</span>

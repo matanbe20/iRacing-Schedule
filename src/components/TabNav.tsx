@@ -33,7 +33,7 @@ export default function TabNav() {
           id="tab-week"
           onClick={() => setActiveTab('week' as Tab)}
         >
-          This Week
+          By Week
         </button>
         <button
           className={'tab-btn' + (activeTab === 'my' ? ' active' : '')}

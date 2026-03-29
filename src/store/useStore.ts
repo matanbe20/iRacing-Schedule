@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { SCHEDULE_DATA } from '../data';
 import { cleanName } from '../utils/helpers';
 import { FREE_CARS, FREE_TRACKS } from '../data/garage-defaults';
+import { getCurrentWeek } from '../utils/schedule';
 import type { Tab, Theme, MySchedule, RaceEntry } from '../types';
 
 const ALL_CATEGORIES = ['SPORTS CAR', 'FORMULA CAR', 'OVAL', 'DIRT ROAD', 'DIRT OVAL', 'UNRANKED'];
@@ -95,6 +96,8 @@ export interface StoreState {
 
   // Navigation
   setActiveTab: (tab: Tab) => void;
+  selectedWeek: number;
+  setSelectedWeek: (week: number) => void;
 
   // Theme
   toggleTheme: () => void;
@@ -217,6 +220,9 @@ function loadInitialState(): Partial<StoreState> {
   else if (tabParam === 'week') activeTab = 'week';
   else if (tabParam === 'events') activeTab = 'events';
 
+  const weekParam = Number(params.get('week'));
+  const selectedWeek = (weekParam >= 1 && weekParam <= 12) ? weekParam : getCurrentWeek();
+
   let sharedEntries: RaceEntry[] = [];
   let isShareModalOpen = false;
   const shareParam = params.get('share');
@@ -275,7 +281,7 @@ function loadInitialState(): Partial<StoreState> {
     history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
   }
 
-  return { ...filters, mySchedule, favorites, ownedCars, ownedTracks, theme, activeTab, sharedEntries, isShareModalOpen, sharedGarageCars, sharedGarageTracks, isGarageShareModalOpen };
+  return { ...filters, mySchedule, favorites, ownedCars, ownedTracks, theme, activeTab, selectedWeek, sharedEntries, isShareModalOpen, sharedGarageCars, sharedGarageTracks, isGarageShareModalOpen };
 }
 
 function syncUrlParams(state: StoreState): void {
@@ -289,6 +295,7 @@ function syncUrlParams(state: StoreState): void {
   if (state.activeCars.size > 0) params.set('cars', [...state.activeCars].join(','));
   if (state.activeTracks.size > 0) params.set('tracks', [...state.activeTracks].join(','));
   if (state.activeTab === 'my' || state.activeTab === 'week' || state.activeTab === 'events') params.set('tab', state.activeTab);
+  if (state.activeTab === 'week') params.set('week', String(state.selectedWeek));
 
   const qs = params.toString();
   const url = window.location.pathname + (qs ? '?' + qs : '');
@@ -328,6 +335,7 @@ const useStore = create<StoreState>((set, get) => ({
 
   // Navigation & UI
   activeTab: initialState.activeTab ?? 'all',
+  selectedWeek: initialState.selectedWeek ?? getCurrentWeek(),
   theme: initialState.theme ?? 'dark',
   isDrawerOpen: false,
   isShareModalOpen: initialState.isShareModalOpen ?? false,
@@ -527,6 +535,12 @@ const useStore = create<StoreState>((set, get) => ({
     set({ activeTab: tab });
     const s = get();
     syncUrlParams(s); saveFilters(s);
+  },
+
+  setSelectedWeek(week) {
+    set({ selectedWeek: week });
+    const s = get();
+    syncUrlParams(s);
   },
 
   // Theme
