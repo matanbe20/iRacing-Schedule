@@ -1,7 +1,7 @@
 {
-  "name": "iRacing Schedule",
-  "short_name": "iRacing Sched",
-  "description": "Browse, filter, and plan your iRacing season schedule.",
+  "name": "iRacingHub",
+  "short_name": "iRacingHub",
+  "description": "Your free iRacing hub — browse every series, filter by car, class & category, track your garage, plan your season week by week, and export to .ics or CSV.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f1117",
