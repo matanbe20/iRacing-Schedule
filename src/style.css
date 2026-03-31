@@ -790,7 +790,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   max-width: 400px;
 }
 
@@ -1422,6 +1422,7 @@ body {
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 4px;
   padding: 0.05rem 0.35rem;
+  white-space: nowrap;
 }
 .tw-card-cars-clickable {
   cursor: pointer;
@@ -1448,7 +1449,7 @@ body {
   display: inline-flex;
 }
 .cars-tooltip {
-  display: none;
+  display: flex;
   position: absolute;
   bottom: calc(100% + 6px);
   left: 0;
@@ -1471,8 +1472,40 @@ body {
   display: block;
   line-height: 1.5;
 }
-.cars-group-wrapper:hover .cars-tooltip {
+.cars-tooltip.cars-tooltip-below {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.cars-multiclass-tooltip {
+  pointer-events: all;
+  min-width: 220px;
+  gap: 0.1rem;
+}
+.cars-multiclass-row {
   display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.cars-multiclass-row:hover {
+  background: rgba(167, 139, 250, 0.15);
+}
+.cars-multiclass-row + .cars-multiclass-row {
+  border-top: 1px solid var(--border);
+}
+.cars-multiclass-label {
+  font-weight: 600;
+  color: #a78bfa;
+  font-size: 0.7rem;
+}
+.cars-multiclass-cars {
+  font-size: 0.65rem;
+  color: var(--text-muted, var(--text));
+  opacity: 0.75;
+  white-space: normal;
 }
 .tw-card-meta .week-rain {
   margin-top: 0;

@@ -48,7 +48,7 @@ const CLASS_PATTERNS: [RegExp, string][] = [
   [/\bGTE\b/i, 'GTE'],
   [/\bGT1\b/i, 'GT1'],
   [/\bGTP\b|BMW M Hybrid|Porsche 963/i, 'GTP'],
-  [/\bTCR\b/i, 'TCR'],
+  [/\bTCR\b|Hyundai Veloster N/i, 'TCR'],
   [/P320|\bLMP3\b/i, 'LMP3'],
   [/P217|\bLMP2\b/i, 'LMP2'],
   [/NASCAR Truck/i, 'NASCAR Truck'],
@@ -60,6 +60,8 @@ const CLASS_PATTERNS: [RegExp, string][] = [
   [/Super Formula/i, 'Super Formula'],
   [/\bSupercars\b/i, 'Supercars'],
   [/Stock Car Brasil/i, 'Stock Car Brasil'],
+  [/Porsche 911 Cup|Porsche 992 Cup/i, 'Cup'],
+  [/Mazda MX-5|BMW M2|Toyota GR86|Renault Clio/i, 'PCC'],
 ];
 
 export interface CarGroup {
@@ -67,10 +69,10 @@ export interface CarGroup {
   cars: string[];
 }
 
-/** Returns null if ≤4 cars (use individual badges). Otherwise groups cars by class. */
+/** Returns null if ≤3 cars (use individual badges). Otherwise groups cars by class. */
 export function groupCarsByClass(cars: string): CarGroup[] | null {
   const list = cars.split(',').map(c => c.trim()).filter(Boolean);
-  if (list.length < 4) return null;
+  if (list.length < 3) return null;
   const grouped = new Map<string, string[]>();
   for (const car of list) {
     const match = CLASS_PATTERNS.find(([re]) => re.test(car));
@@ -78,10 +80,23 @@ export function groupCarsByClass(cars: string): CarGroup[] | null {
     if (!grouped.has(cls)) grouped.set(cls, []);
     grouped.get(cls)!.push(car);
   }
-  return Array.from(grouped.entries()).map(([cls, carList]) => ({
-    label: cls === 'Other' ? 'Other' : cls + ' Class',
-    cars: carList,
-  }));
+  // Merge single-car classes into Other
+  const other: string[] = [];
+  for (const [cls, carList] of grouped.entries()) {
+    if (cls !== 'Other' && carList.length === 1) {
+      other.push(...carList);
+      grouped.delete(cls);
+    }
+  }
+  if (other.length > 0) {
+    grouped.set('Other', [...(grouped.get('Other') ?? []), ...other]);
+  }
+  return Array.from(grouped.entries())
+    .sort(([a], [b]) => (a === 'Other' ? 1 : b === 'Other' ? -1 : 0))
+    .map(([cls, carList]) => ({
+      label: cls === 'Other' ? 'Other' : cls + ' Class',
+      cars: carList,
+    }));
 }
 
 const LOGO_FOLDER: Partial<Record<Category, string>> = {
