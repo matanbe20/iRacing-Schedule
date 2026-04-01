@@ -157,7 +157,7 @@ export default function FilterSidebar() {
             className="kofi-sidebar-btn"
             aria-label="Buy Me a Coffee"
           >
-            <img src="https://storage.ko-fi.com/cdn/logomarkLogo.png" alt="Ko-fi" height="20" />
+            <img src="https://storage.ko-fi.com/cdn/logomarkLogo.png" alt="Ko-fi" width="20" height="20" style={{objectFit:'contain'}} />
             Buy me a coffee
           </a>
         </div>

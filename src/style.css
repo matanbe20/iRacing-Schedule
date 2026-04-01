@@ -105,45 +105,16 @@ body {
   gap: 0.5rem;
 }
 
-.discord-sidebar-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 38px;
-  margin: auto;
-  padding: 0.4rem 0.85rem;
-  border-radius: 12px;
-  background: #1b1b1d;
-  color: #ffffff;
-  text-decoration: none;
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 500;
-  opacity: 0.7;
-  transition:
-    opacity 0.15s,
-    color 0.15s;
-  white-space: nowrap;
-}
-
-.discord-sidebar-btn svg {
-  color: #5865f2;
-  flex-shrink: 0;
-}
-
-.discord-sidebar-btn:hover {
-  opacity: 1;
-  color: var(--text);
-}
-
+.discord-sidebar-btn,
 .kofi-sidebar-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   height: 38px;
   margin: auto;
-  padding: 0.4rem 0.85rem;
+  padding: 0 0.85rem;
   border-radius: 12px;
+  border: 1px solid #3a3d52;
   background: #1b1b1d;
   color: #ffffff;
   text-decoration: none;
@@ -157,13 +128,31 @@ body {
   white-space: nowrap;
 }
 
+.discord-sidebar-btn svg,
 .kofi-sidebar-btn img {
   flex-shrink: 0;
 }
 
+.discord-sidebar-btn svg {
+  color: #5865f2;
+}
+
+.discord-sidebar-btn:hover,
 .kofi-sidebar-btn:hover {
   opacity: 1;
   color: var(--text);
+}
+
+[data-theme='light'] .discord-sidebar-btn,
+[data-theme='light'] .kofi-sidebar-btn {
+  background: #c8ccde;
+  border-color: #a8adc4;
+  color: #1a1d2e;
+}
+
+[data-theme='light'] .discord-sidebar-btn:hover,
+[data-theme='light'] .kofi-sidebar-btn:hover {
+  color: #1a1d2e;
 }
 
 .kofi-img-btn {
