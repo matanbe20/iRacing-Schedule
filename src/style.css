@@ -22,20 +22,20 @@
 }
 
 :root[data-theme='light'] {
-  --bg: #f0f2f8;
-  --surface: #ffffff;
-  --surface2: #e6e9f5;
-  --border: #cdd1e5;
+  --bg: #d8dce9;
+  --surface: #e4e7f2;
+  --surface2: #cdd1e3;
+  --border: #b0b5cc;
   --text: #1a1d2e;
   --text-dim: #6b7190;
   --accent: #2563eb;
   --accent-glow: rgba(37, 99, 235, 0.12);
   --current-week: rgba(37, 99, 235, 0.08);
   --current-week-border: #2563eb;
-  --header-bg: linear-gradient(160deg, #dce2f5 0%, #f0f2f8 60%);
+  --header-bg: linear-gradient(160deg, #c8cee0 0%, #d8dce9 60%);
   --header-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --tab-nav-bg: #e6e9f5;
-  --week-cell-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --tab-nav-bg: #cdd1e3;
+  --week-cell-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -680,8 +680,17 @@ body {
   transition: border-color 0.15s;
 }
 
+[data-theme='light'] .series-card {
+  background: #e2e4ec;
+  border-color: #c0c4d4;
+}
+
 .series-card:hover {
   border-color: #3d4260;
+}
+
+[data-theme='light'] .series-card:hover {
+  border-color: #a8adc4;
 }
 
 .series-header {
@@ -1206,6 +1215,15 @@ body {
   border-color: #3d4260;
 }
 
+[data-theme='light'] .my-race-card {
+  background: #e2e4ec;
+  border-color: #c0c4d4;
+}
+
+[data-theme='light'] .my-race-card:hover {
+  border-color: #a8adc4;
+}
+
 .my-race-info {
   flex: 1;
   min-width: 0;
@@ -1395,6 +1413,15 @@ body {
 }
 .tw-card:hover {
   border-color: #3d4260;
+}
+
+[data-theme='light'] .tw-card {
+  background: #e2e4ec;
+  border-color: #c0c4d4;
+}
+
+[data-theme='light'] .tw-card:hover {
+  border-color: #a8adc4;
 }
 .tw-card-info {
   flex: 1;
