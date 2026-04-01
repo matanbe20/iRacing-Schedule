@@ -15,8 +15,7 @@ export interface PriceCalc {
 export const DISCOUNT_TIERS: DiscountTier[] = [
   { minItems: 1,  maxItems: 2,        discountPct: 0  },
   { minItems: 3,  maxItems: 5,        discountPct: 10 },
-  { minItems: 6,  maxItems: 9,        discountPct: 20 },
-  { minItems: 10, maxItems: Infinity, discountPct: 25 },
+  { minItems: 6,  maxItems: Infinity, discountPct: 15 },
 ];
 
 export function getDiscountTier(count: number): DiscountTier | null {
