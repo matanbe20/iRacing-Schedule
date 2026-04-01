@@ -3108,11 +3108,13 @@ body.share-modal-open {
 
 /* ── Buy Guide Tab ───────────────────────────────────────────────────────── */
 
-.buy-tab-active .filter-sidebar {
-  display: none;
-}
-.buy-tab-active .content-area {
-  width: 100%;
+@media (max-width: 768px) {
+  .buy-tab-active .filter-sidebar {
+    display: none;
+  }
+  .buy-tab-active .content-area {
+    width: 100%;
+  }
 }
 
 .buy-guide-panel {
