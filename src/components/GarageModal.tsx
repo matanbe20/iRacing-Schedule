@@ -7,6 +7,22 @@ import { FREE_CARS, FREE_TRACKS } from '../data/garage-defaults';
 const FREE_CARS_SET = new Set(FREE_CARS);
 const FREE_TRACKS_SET = new Set(FREE_TRACKS);
 
+const IconCar = () => (
+  <svg width="16" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3.5 7L5.5 2h7l2 5" />
+    <rect x="1" y="7" width="16" height="4" rx="1.5" />
+    <circle cx="4.5" cy="12" r="1.5" />
+    <circle cx="13.5" cy="12" r="1.5" />
+  </svg>
+);
+
+const IconTrack = () => (
+  <svg width="16" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <ellipse cx="9" cy="7" rx="7.5" ry="5" />
+    <ellipse cx="9" cy="7" rx="4" ry="2.2" />
+  </svg>
+);
+
 function buildCarList(): string[] {
   const s = new Set<string>();
   SCHEDULE_DATA.forEach(series =>
@@ -140,13 +156,13 @@ export default function GarageModal() {
             className={'garage-tab-btn' + (tab === 'cars' ? ' active' : '')}
             onClick={() => { setTab('cars'); setSearch(''); }}
           >
-            Cars <span className="garage-tab-count">{localCars.size}</span>
+            <IconCar />Cars <span className="garage-tab-count">{localCars.size}</span>
           </button>
           <button
             className={'garage-tab-btn' + (tab === 'tracks' ? ' active' : '')}
             onClick={() => { setTab('tracks'); setSearch(''); }}
           >
-            Tracks <span className="garage-tab-count">{localTracks.size}</span>
+            <IconTrack />Tracks <span className="garage-tab-count">{localTracks.size}</span>
           </button>
         </div>
 

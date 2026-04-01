@@ -25,6 +25,22 @@ const ALL_TRACKS = buildTrackList();
 const ALL_CARS = buildCarList();
 
 const IRACING_STORE_URL = 'https://members.iracing.com/membersite/member/store_r.jsp';
+
+const IconCar = () => (
+  <svg width="16" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3.5 7L5.5 2h7l2 5" />
+    <rect x="1" y="7" width="16" height="4" rx="1.5" />
+    <circle cx="4.5" cy="12" r="1.5" />
+    <circle cx="13.5" cy="12" r="1.5" />
+  </svg>
+);
+
+const IconTrack = () => (
+  <svg width="16" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <ellipse cx="9" cy="7" rx="7.5" ry="5" />
+    <ellipse cx="9" cy="7" rx="4" ry="2.2" />
+  </svg>
+);
 const FALLBACK_PRICE = 11.95;
 
 function getTrackPrice(name: string): number {
@@ -159,14 +175,14 @@ export default function BuyGuidePanel() {
             className={'buy-sub-tab-btn' + (buyTab === 'tracks' ? ' active' : '')}
             onClick={() => setBuyTab('tracks')}
           >
-            Tracks
+            <IconTrack />Tracks
             <span className="buy-tab-count">{selectedTracks.size > 0 ? selectedTracks.size : ''}</span>
           </button>
           <button
             className={'buy-sub-tab-btn' + (buyTab === 'cars' ? ' active' : '')}
             onClick={() => setBuyTab('cars')}
           >
-            Cars
+            <IconCar />Cars
             <span className="buy-tab-count">{selectedCars.size > 0 ? selectedCars.size : ''}</span>
           </button>
         </div>
