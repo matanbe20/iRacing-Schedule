@@ -20,7 +20,7 @@ export default function MySchedulePanel() {
     }
     const t = setTimeout(() => {
       document.getElementById('my-week-' + currentWeek)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 350);
+    }, 250);
     return () => clearTimeout(t);
   }, []);
 
