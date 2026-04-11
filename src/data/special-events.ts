@@ -36,7 +36,7 @@ export const SPECIAL_EVENTS: SpecialEvent[] = [
     cars: 'Nissan GTP // Audi 90 Quattro GTO',
     track: 'WeatherTech Raceway Laguna Seca',
     startDate: '2026-04-10',
-    endDate: '2026-04-11',
+    endDate: '2026-04-12',
     bannerUrl: 'https://s100.iracing.com/wp-content/uploads/2026/03/iRSE-2026-IMSA-Classic-500.png',
     posterUrl: 'https://images-static.iracing.com/special-events/2026/posters/special-event-2026-imsa-classic-poster.jpg',
     past: false,
